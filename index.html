@@ -14,70 +14,74 @@
             --accent-2: #8b5cf6; 
             --accent-3: #ec4899; 
             --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(15, 1, 1, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
+        /* Prevent body background from covering fixed elements */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
             color: #ffffff;
             overflow-x: hidden;
             letter-spacing: -0.01em;
+            margin: 0;
         }
 
-        /* Fixed Background Container to prevent Z-Index issues */
+        /* Fixed Background - Now explicitly in front of body but behind content */
         .bg-fixed-container {
             position: fixed;
             inset: 0;
-            z-index: -1;
+            z-index: 0;
             overflow: hidden;
+            pointer-events: none;
             background: var(--bg);
         }
 
-        /* The Grid System */
+        /* The Grid System - Slightly more prominent */
         .grid-bg {
             position: absolute;
             inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 50px 50px;
             mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
             pointer-events: none;
         }
 
-        /* Aura Gradients - Enhanced Visibility */
+        /* Aura Gradients - Much more robust rendering */
         .aura {
             position: absolute;
-            width: 80vw;
-            height: 80vw;
-            max-width: 800px;
-            max-height: 800px;
+            width: 70vw;
+            height: 70vw;
+            max-width: 900px;
+            max-height: 900px;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.25; /* Increased for better visibility */
+            filter: blur(80px);
+            opacity: 0.35; /* Increased opacity for deployment visibility */
             pointer-events: none;
-            animation: aura-move 25s infinite alternate ease-in-out;
+            will-change: transform;
+            animation: aura-move 20s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-1); top: -10%; left: -10%; }
-        .aura-2 { background: var(--accent-2); bottom: -10%; right: -10%; animation-delay: -5s; }
-        .aura-3 { background: var(--accent-3); top: 30%; left: 50%; animation-delay: -12s; }
+        .aura-1 { background: var(--accent-1); top: -15%; left: -10%; }
+        .aura-2 { background: var(--accent-2); bottom: -15%; right: -5%; animation-delay: -5s; }
+        .aura-3 { background: var(--accent-3); top: 40%; left: 55%; animation-delay: -10s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.2); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
         }
 
-        /* Modern Glassmorphism */
+        /* Modern Glassmorphism with fallback */
         .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Animated Border Beam - Cross-browser Compatible Version */
+        /* Robust Animated Border Beam */
         .border-beam {
             position: relative;
             z-index: 1;
@@ -86,15 +90,15 @@
         .border-beam::before {
             content: "";
             position: absolute;
-            inset: -1.5px;
+            inset: -1px;
             border-radius: inherit;
-            padding: 1.5px;
-            background: conic-gradient(from 0deg, transparent 60%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 50%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: destination-out;
             mask-composite: exclude;
-            animation: spin-beam 4s linear infinite;
+            animation: spin-beam 5s linear infinite;
             pointer-events: none;
         }
 
@@ -103,31 +107,35 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Text Effects */
         .text-glow {
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
         }
         
         .gradient-brand {
-            background: linear-gradient(to right, #ffffff 20%, #818cf8 60%, #c084fc 100%);
+            background: linear-gradient(to right, #ffffff, #818cf8, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Reveal System */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Ensure all content stays above fixed background */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
-    <!-- Background Layer -->
+    <!-- Background Layer (Fixed & Z-Index Corrected) -->
     <div class="bg-fixed-container">
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
@@ -135,172 +143,167 @@
         <div class="aura aura-3"></div>
     </div>
 
-    <!-- Ultra-Minimal Nav -->
-    <header class="fixed top-0 w-full z-[100] px-6 py-8">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
-                    <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
-                </div>
-                <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
-            </div>
-            
-            <div class="hidden md:flex items-center gap-10 glass-panel px-8 py-3 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase">
-                <a href="#expertise" class="hover:text-blue-400 transition-colors">Expertise</a>
-                <a href="#lab" class="hover:text-purple-400 transition-colors">The Lab</a>
-                <a href="#studio" class="hover:text-pink-400 transition-colors">Studio</a>
-            </div>
-
-            <button class="px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                Inquiry
-            </button>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero Section - Added pt-32 to clear the fixed navigation -->
-        <section class="min-h-screen flex flex-col justify-center items-center px-6 relative pt-32">
-            <div class="reveal max-w-5xl text-center">
-                <h1 class="text-7xl md:text-[140px] font-extrabold tracking-tighter leading-[0.85] mb-12 text-glow">
-                    CRAFTING <br>
-                    <span class="gradient-brand">PURE LOGIC</span>
-                </h1>
-
-                <p class="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-16">
-                    A boutique intelligence studio specializing in high-frequency AI automation and bespoke infrastructure for the modern elite enterprise.
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-                    <a href="#expertise" class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
-                        <span class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                            <i data-lucide="arrow-down" class="w-5 h-5"></i>
-                        </span>
-                        Scroll to Explore
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bento Grid Section -->
-        <section id="expertise" class="py-32 px-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6">
-                    <!-- High-Impact Lead Card -->
-                    <div class="md:col-span-8 glass-panel rounded-[3rem] p-12 md:p-20 flex flex-col justify-between group overflow-hidden relative">
-                        <div class="absolute -top-20 -right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                            <i data-lucide="brain-cog" class="w-96 h-96"></i>
-                        </div>
-                        <div class="relative z-10">
-                            <span class="text-blue-400 font-bold text-xs tracking-widest uppercase block mb-6">// Autonomous Logic</span>
-                            <h3 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight">Neural Systems for <br> Complex Ops.</h3>
-                            <p class="text-slate-400 text-lg max-w-md leading-relaxed">
-                                We don't build chatbots. We build autonomous neural agents that manage your global supply chain, logistics, and data compliance in real-time.
-                            </p>
-                        </div>
-                        <div class="mt-12 flex flex-wrap gap-4">
-                            <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Case Study</button>
-                            <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Technical Specs</button>
-                        </div>
+    <div class="content-wrapper">
+        <!-- Ultra-Minimal Nav -->
+        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
                     </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-10 glass-panel px-8 py-3 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase">
+                    <a href="#expertise" class="hover:text-blue-400 transition-colors">Expertise</a>
+                    <a href="#lab" class="hover:text-purple-400 transition-colors">The Lab</a>
+                    <a href="#studio" class="hover:text-pink-400 transition-colors">Studio</a>
+                </div>
 
-                    <!-- Side Card with Animated Border -->
-                    <div class="md:col-span-4 glass-panel rounded-[3rem] p-12 flex flex-col justify-between border-beam overflow-hidden">
-                        <div>
-                            <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-8">
-                                <i data-lucide="shield-check" class="w-8 h-8"></i>
+                <button class="px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    Inquiry
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-32 relative">
+                <div class="reveal max-w-5xl text-center">
+                    <h1 class="text-7xl md:text-[140px] font-extrabold tracking-tighter leading-[0.85] mb-12 text-glow">
+                        CRAFTING <br>
+                        <span class="gradient-brand">PURE LOGIC</span>
+                    </h1>
+
+                    <p class="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-16">
+                        A boutique intelligence studio specializing in high-frequency AI automation and bespoke infrastructure for the modern elite enterprise.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
+                        <a href="#expertise" class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
+                            <span class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                            </span>
+                            Scroll to Explore
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bento Grid Section -->
+            <section id="expertise" class="py-32 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6">
+                        <div class="md:col-span-8 glass-panel rounded-[3rem] p-12 md:p-20 flex flex-col justify-between group overflow-hidden relative">
+                            <div class="absolute -top-20 -right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                                <i data-lucide="brain-cog" class="w-96 h-96"></i>
                             </div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-4">Zero Trust <br> Sovereignty</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">
-                                Protecting data at the speed of light with our proprietary Quantum-Resistant encryption layer.
-                            </p>
+                            <div class="relative z-10">
+                                <span class="text-blue-400 font-bold text-xs tracking-widest uppercase block mb-6">// Autonomous Logic</span>
+                                <h3 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight">Neural Systems for <br> Complex Ops.</h3>
+                                <p class="text-slate-400 text-lg max-w-md leading-relaxed">
+                                    We don't build chatbots. We build autonomous neural agents that manage your global supply chain, logistics, and data compliance in real-time.
+                                </p>
+                            </div>
+                            <div class="mt-12 flex flex-wrap gap-4">
+                                <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Case Study</button>
+                                <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Technical Specs</button>
+                            </div>
                         </div>
-                        <div class="pt-8 mt-8 border-t border-white/5">
-                            <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Security Level: EAL7+</span>
+
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-12 flex flex-col justify-between border-beam overflow-hidden">
+                            <div>
+                                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-8">
+                                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold tracking-tight mb-4">Zero Trust <br> Sovereignty</h3>
+                                <p class="text-slate-500 text-sm leading-relaxed">
+                                    Protecting data at the speed of light with our proprietary Quantum-Resistant encryption layer.
+                                </p>
+                            </div>
+                            <div class="pt-8 mt-8 border-t border-white/5">
+                                <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Security Level: EAL7+</span>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                            <i data-lucide="zap" class="w-8 h-8 text-pink-500 mb-6 transition-transform group-hover:scale-110"></i>
+                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Instant Edge</h4>
+                            <p class="text-slate-500 text-sm">Global CDN integration with sub-5ms latency across all continents.</p>
+                        </div>
+
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                            <i data-lucide="database" class="w-8 h-8 text-blue-500 mb-6 transition-transform group-hover:scale-110"></i>
+                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Synth Data</h4>
+                            <p class="text-slate-500 text-sm">Synthetic data generation to train models where real data is scarce or sensitive.</p>
+                        </div>
+
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                            <i data-lucide="terminal" class="w-8 h-8 text-emerald-500 mb-6 transition-transform group-hover:scale-110"></i>
+                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Core API</h4>
+                            <p class="text-slate-500 text-sm">Ultra-fast REST & GraphQL endpoints designed for 100k requests/second.</p>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Tech Pillars -->
-                    <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5">
-                        <i data-lucide="zap" class="w-8 h-8 text-pink-500 mb-6 transition-transform group-hover:scale-110"></i>
-                        <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Instant Edge</h4>
-                        <p class="text-slate-500 text-sm">Global CDN integration with sub-5ms latency across all continents.</p>
-                    </div>
-
-                    <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5">
-                        <i data-lucide="database" class="w-8 h-8 text-blue-500 mb-6 transition-transform group-hover:scale-110"></i>
-                        <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Synth Data</h4>
-                        <p class="text-slate-500 text-sm">Synthetic data generation to train models where real data is scarce or sensitive.</p>
-                    </div>
-
-                    <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5">
-                        <i data-lucide="terminal" class="w-8 h-8 text-emerald-500 mb-6 transition-transform group-hover:scale-110"></i>
-                        <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Core API</h4>
-                        <p class="text-slate-500 text-sm">Ultra-fast REST & GraphQL endpoints designed for 100k requests/second.</p>
+            <section id="studio" class="py-40 px-6">
+                <div class="max-w-3xl mx-auto text-center">
+                    <div class="reveal">
+                        <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 text-glow">REACH OUT.</h2>
+                        <p class="text-slate-500 mb-16 text-lg max-w-lg mx-auto">We only take on four high-impact partners per quarter. Ensure your slot in our next cycle.</p>
+                        <a href="mailto:studio@luma.tech" class="text-3xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[16px] block truncate">studio@luma.tech</a>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </main>
 
-        <!-- Minimal CTA -->
-        <section id="studio" class="py-40 px-6">
-            <div class="max-w-3xl mx-auto text-center">
-                <div class="reveal">
-                    <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 text-glow">REACH OUT.</h2>
-                    <p class="text-slate-500 mb-16 text-lg max-w-lg mx-auto">We only take on four high-impact partners per quarter. Ensure your slot in our next cycle.</p>
-                    <a href="mailto:studio@luma.tech" class="text-3xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[16px] block truncate">studio@luma.tech</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Studio Footer -->
-    <footer class="py-20 px-6 border-t border-white/5">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
-                        <div class="w-2 h-2 bg-black rounded-full"></div>
+        <footer class="py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
                     </div>
-                    <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                    <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Built for the era of intelligence.</p>
                 </div>
-                <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Built for the era of intelligence.</p>
-            </div>
 
-            <div class="flex gap-12 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                <a href="#" class="hover:text-white transition-colors">Lab</a>
-                <a href="#" class="hover:text-white transition-colors">Ethos</a>
-                <a href="#" class="hover:text-white transition-colors">Legal</a>
-                <a href="#" class="hover:text-white transition-colors">Privacy</a>
-            </div>
+                <div class="flex gap-12 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="#" class="hover:text-white transition-colors">Lab</a>
+                    <a href="#" class="hover:text-white transition-colors">Ethos</a>
+                    <a href="#" class="hover:text-white transition-colors">Legal</a>
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                </div>
 
-            <div class="text-[10px] font-medium text-slate-600">
-                &copy; 2025 LUMA STUDIO. ALL RIGHTS RESERVED.
+                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                    &copy; 2025 LUMA STUDIO.
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <script>
         lucide.createIcons();
 
-        // Optimized Reveal Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.1 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Smooth Mouse Parallax for Background
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 40;
-            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            const x = (e.clientX / window.innerWidth - 0.5) * 60;
+            const y = (e.clientY / window.innerHeight - 0.5) * 60;
             
             auras.forEach((aura, index) => {
-                const speed = (index + 1) * 0.4;
+                const speed = (index + 1) * 0.5;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
         });
