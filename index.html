@@ -21,7 +21,6 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        /* Prevent body background from covering fixed elements */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
@@ -89,7 +88,7 @@
             border: 1px solid var(--border);
         }
 
-        /* Robust Animated Border Beam */
+        /* Animated Border Beam */
         .border-beam {
             position: relative;
             z-index: 1;
@@ -153,13 +152,12 @@
             pointer-events: auto;
         }
 
-        /* Icon State Management */
         #menu-toggle .icon-close { display: none; }
         #menu-toggle.is-active .icon-close { display: block; }
         #menu-toggle.is-active .icon-menu { display: none; }
     </style>
 </head>
-<body>
+<body id="top">
     <div class="bg-fixed-container">
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
@@ -170,42 +168,48 @@
     <div class="content-wrapper">
         <header class="fixed top-0 w-full z-[100] px-6 py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
-                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.href='index.html'">
                     <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
                         <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
                     </div>
                     <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
                 </div>
                 
-                <div class="hidden md:flex items-center gap-10 glass-panel px-8 py-3 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase">
-                    <a href="#expertise" class="hover:text-blue-400 transition-colors">Expertise</a>
-                    <a href="#lab" class="hover:text-purple-400 transition-colors">The Lab</a>
-                    <a href="#studio" class="hover:text-pink-400 transition-colors">Studio</a>
-                </div>
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-purple-400 transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                </nav>
 
                 <div class="flex items-center gap-4">
-                    <button class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                         Inquiry
-                    </button>
-                    <button id="menu-toggle" class="md:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
                         <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
                         <i data-lucide="x" class="w-5 h-5 icon-close"></i>
                     </button>
                 </div>
 
-                <div id="mobile-menu" class="absolute top-24 left-0 w-full md:hidden glass-panel rounded-3xl p-8 flex flex-col gap-6 z-[101]">
-                    <a href="#expertise" class="mobile-link text-lg font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Expertise</a>
-                    <a href="#lab" class="mobile-link text-lg font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">The Lab</a>
-                    <a href="#studio" class="mobile-link text-lg font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Studio</a>
-                    <div class="pt-6 border-t border-white/5 flex flex-col gap-4">
-                        <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Contact</span>
-                        <a href="mailto:studio@luma.tech" class="text-sm font-medium text-blue-400">studio@luma.tech</a>
-                    </div>
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-24 left-0 w-full lg:hidden glass-panel rounded-3xl p-8 flex flex-col gap-5 z-[101]">
+                    <a href="index.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors text-blue-400">Contact Us</a>
                 </div>
             </div>
         </header>
 
         <main>
+            <!-- Hero Section -->
             <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-32 relative text-center">
                 <div class="reveal max-w-5xl">
                     <h1 class="text-6xl md:text-[140px] font-extrabold tracking-tighter leading-[0.85] mb-12 text-glow">
@@ -216,17 +220,18 @@
                         A boutique intelligence studio specializing in high-frequency AI automation and bespoke infrastructure for the modern elite enterprise.
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-                        <a href="#expertise" class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
+                        <a href="ai-solutions.html" class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
                             <span class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                                <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
                             </span>
-                            Scroll to Explore
+                            Explore Intelligence
                         </a>
                     </div>
                 </div>
             </section>
 
-            <section id="expertise" class="py-32 px-6">
+            <!-- Preview Sections -->
+            <section class="py-32 px-6">
                 <div class="max-w-7xl mx-auto">
                     <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div class="md:col-span-8 glass-panel rounded-[3rem] p-12 md:p-20 flex flex-col justify-between group overflow-hidden relative">
@@ -237,12 +242,12 @@
                                 <span class="text-blue-400 font-bold text-xs tracking-widest uppercase block mb-6">// Autonomous Logic</span>
                                 <h3 class="text-3xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight">Neural Systems for <br> Complex Ops.</h3>
                                 <p class="text-slate-400 text-lg max-w-md leading-relaxed">
-                                    We don't build chatbots. We build autonomous neural agents that manage your global supply chain, logistics, and data compliance in real-time.
+                                    We build autonomous neural agents that manage global supply chains, logistics, and data compliance in real-time, removing human friction from high-stakes decision making.
                                 </p>
                             </div>
                             <div class="mt-12 flex flex-wrap gap-4">
-                                <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Case Study</button>
-                                <button class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Technical Specs</button>
+                                <a href="ai-solutions.html" class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">AI Capabilities</a>
+                                <a href="automations.html" class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Automation Roadmap</a>
                             </div>
                         </div>
 
@@ -251,43 +256,45 @@
                                 <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-8">
                                     <i data-lucide="shield-check" class="w-8 h-8"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold tracking-tight mb-4">Zero Trust <br> Sovereignty</h3>
+                                <h3 class="text-2xl font-bold tracking-tight mb-4 uppercase">IT <br> Sovereignty</h3>
                                 <p class="text-slate-500 text-sm leading-relaxed">
-                                    Protecting data at the speed of light with our proprietary Quantum-Resistant encryption layer.
+                                    Full-stack infrastructure solutions designed for sovereignty. Protecting enterprise data with Quantum-Resistant layers and zero-trust protocols.
                                 </p>
                             </div>
                             <div class="pt-8 mt-8 border-t border-white/5">
-                                <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Security Level: EAL7+</span>
+                                <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Solutions Level: EAL7+</span>
                             </div>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                        <!-- Mini Features -->
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
                             <i data-lucide="zap" class="w-8 h-8 text-pink-500 mb-6 transition-transform group-hover:scale-110"></i>
-                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Instant Edge</h4>
-                            <p class="text-slate-500 text-sm">Global CDN integration with sub-5ms latency across all continents.</p>
+                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Fast Edge</h4>
+                            <p class="text-slate-500 text-sm">Global IT infrastructure with sub-5ms latency across all major continents.</p>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='aboutus.html'">
                             <i data-lucide="database" class="w-8 h-8 text-blue-500 mb-6 transition-transform group-hover:scale-110"></i>
-                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Synth Data</h4>
-                            <p class="text-slate-500 text-sm">Synthetic data generation to train models where real data is scarce or sensitive.</p>
+                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">The Ethos</h4>
+                            <p class="text-slate-500 text-sm">Our studio operates at the intersection of mathematical precision and creative intelligence.</p>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors">
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
                             <i data-lucide="terminal" class="w-8 h-8 text-emerald-500 mb-6 transition-transform group-hover:scale-110"></i>
                             <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Core API</h4>
-                            <p class="text-slate-500 text-sm">Ultra-fast REST & GraphQL endpoints designed for 100k requests/second.</p>
+                            <p class="text-slate-500 text-sm">Universal connectors for existing enterprise software and legacy systems.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="studio" class="py-40 px-6">
+            <!-- Final Reach Out Section -->
+            <section class="py-40 px-6">
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="reveal">
                         <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 text-glow">REACH OUT.</h2>
-                        <p class="text-slate-500 mb-16 text-lg max-w-lg mx-auto">We only take on four high-impact partners per quarter. Ensure your slot in our next cycle.</p>
-                        <a href="mailto:studio@luma.tech" class="text-2xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[16px] block truncate px-4">studio@luma.tech</a>
+                        <p class="text-slate-500 mb-16 text-lg max-w-lg mx-auto">Inquire about our bespoke AI and IT solutions. We partner with only four new enterprises per quarter.</p>
+                        <a href="contactus.html" class="text-2xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[16px] block truncate px-4 uppercase tracking-tighter">Open Assessment</a>
                     </div>
                 </div>
             </section>
@@ -296,24 +303,30 @@
         <footer class="py-20 px-6 border-t border-white/10">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
                 <div class="flex flex-col gap-4">
-                    <div class="flex items-center justify-center md:justify-start gap-2">
+                    <div class="flex items-center justify-center md:justify-start gap-2" onclick="window.location.href='index.html'" style="cursor: pointer;">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
                             <div class="w-2 h-2 bg-black rounded-full"></div>
                         </div>
                         <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
                     </div>
-                    <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Built for the era of intelligence.</p>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                    </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="#" class="hover:text-white transition-colors">Lab</a>
-                    <a href="#" class="hover:text-white transition-colors">Ethos</a>
-                    <a href="#" class="hover:text-white transition-colors">Legal</a>
-                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <!-- Footer Navigation Corrected -->
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact Us</a>
                 </div>
 
                 <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
-                    &copy; 2025 LUMA STUDIO.
+                    INDIA
                 </div>
             </div>
         </footer>
@@ -352,7 +365,7 @@
             }
         });
 
-        // Intersection Observer for Reveal
+        // Intersection Observer for Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -363,7 +376,7 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Background Parallax
+        // Background Parallax Interaction
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 60;
