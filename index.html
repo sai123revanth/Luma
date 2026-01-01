@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,7 +157,7 @@
         #menu-toggle.is-active .icon-menu { display: none; }
     </style>
 </head>
-<body id="top">
+<body id="home-root">
     <div class="bg-fixed-container">
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
@@ -169,14 +169,14 @@
         <header class="fixed top-0 w-full z-[100] px-6 py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <!-- Logo -->
-                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.href='index.html'">
+                <a href="index.html" class="flex items-center gap-3 group cursor-pointer decoration-none">
                     <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
                         <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
                     </div>
-                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
-                </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase text-white">Luma</span>
+                </a>
                 
-                <!-- Desktop Navigation -->
+                <!-- Desktop Navigation - Strictly Linked to HTML Files -->
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
                     <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
@@ -196,7 +196,7 @@
                     </button>
                 </div>
 
-                <!-- Mobile Menu -->
+                <!-- Mobile Menu - Strictly Linked to HTML Files -->
                 <div id="mobile-menu" class="absolute top-24 left-0 w-full lg:hidden glass-panel rounded-3xl p-8 flex flex-col gap-5 z-[101]">
                     <a href="index.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">AI</a>
@@ -230,8 +230,8 @@
                 </div>
             </section>
 
-            <!-- Preview Sections -->
-            <section class="py-32 px-6">
+            <!-- Preview Sections (IDs prefixed to prevent page conflicts) -->
+            <section id="sec-preview-content" class="py-32 px-6">
                 <div class="max-w-7xl mx-auto">
                     <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div class="md:col-span-8 glass-panel rounded-[3rem] p-12 md:p-20 flex flex-col justify-between group overflow-hidden relative">
@@ -251,7 +251,7 @@
                             </div>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-12 flex flex-col justify-between border-beam overflow-hidden">
+                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-12 flex flex-col justify-between border-beam overflow-hidden cursor-pointer" onclick="window.location.href='it-solutions.html'">
                             <div>
                                 <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-8">
                                     <i data-lucide="shield-check" class="w-8 h-8"></i>
@@ -266,7 +266,7 @@
                             </div>
                         </div>
 
-                        <!-- Mini Features -->
+                        <!-- Mini Feature Cards - Strictly Linked -->
                         <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
                             <i data-lucide="zap" class="w-8 h-8 text-pink-500 mb-6 transition-transform group-hover:scale-110"></i>
                             <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Fast Edge</h4>
@@ -289,7 +289,7 @@
             </section>
 
             <!-- Final Reach Out Section -->
-            <section class="py-40 px-6">
+            <section id="sec-reach-out" class="py-40 px-6">
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="reveal">
                         <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 text-glow">REACH OUT.</h2>
@@ -303,19 +303,19 @@
         <footer class="py-20 px-6 border-t border-white/10">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
                 <div class="flex flex-col gap-4">
-                    <div class="flex items-center justify-center md:justify-start gap-2" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <a href="index.html" class="flex items-center justify-center md:justify-start gap-2 group decoration-none">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
                             <div class="w-2 h-2 bg-black rounded-full"></div>
                         </div>
-                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
-                    </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
+                    </a>
                     <div class="flex flex-col gap-1">
                         <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
                         <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <!-- Footer Navigation Corrected -->
+                <!-- Footer Navigation - Strictly Linked to HTML Files -->
                 <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     <a href="index.html" class="hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
