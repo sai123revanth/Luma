@@ -173,6 +173,60 @@
         .ring-1 { width: 450px; height: 350px; animation-duration: 20s; border-color: rgba(59, 130, 246, 0.1); }
         .ring-2 { width: 550px; height: 450px; animation-duration: 25s; animation-direction: reverse; border-color: rgba(139, 92, 246, 0.1); }
 
+        /* Side Intelligence Stream Animation */
+        .side-data-stream {
+            position: absolute;
+            left: 4%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            pointer-events: none;
+            opacity: 0.4;
+            display: none; /* Mobile optimization */
+        }
+
+        @media (min-width: 1280px) {
+            .side-data-stream { display: flex; }
+        }
+
+        .stream-pillar {
+            width: 1px;
+            height: 250px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+            position: relative;
+        }
+
+        .stream-pulse {
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, #fff, transparent);
+            left: -0.5px;
+            animation: stream-slide 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stream-fragment {
+            width: 6px;
+            height: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: rotate(45deg);
+            animation: fragment-pulse 4s infinite alternate ease-in-out;
+        }
+
+        @keyframes stream-slide {
+            0% { top: -10%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        @keyframes fragment-pulse {
+            0% { transform: rotate(45deg) scale(0.8); opacity: 0.2; }
+            100% { transform: rotate(225deg) scale(1.2); opacity: 0.8; }
+        }
+
         @keyframes core-pulse {
             0% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
             100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
@@ -275,11 +329,20 @@
         <main>
             <!-- Hero Section -->
             <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-24 pb-12 relative text-center">
-                <!-- Neural Animation Container -->
+                <!-- Neural Animation Container (Behind) -->
                 <div class="hero-animation-bg reveal">
                     <div class="neural-core"></div>
                     <div class="neural-ring ring-1"></div>
                     <div class="neural-ring ring-2"></div>
+                </div>
+
+                <!-- Left Side Animation Stream -->
+                <div class="side-data-stream reveal">
+                    <div class="stream-fragment"></div>
+                    <div class="stream-pillar">
+                        <div class="stream-pulse"></div>
+                    </div>
+                    <div class="stream-fragment" style="animation-delay: 1s;"></div>
                 </div>
 
                 <div class="reveal max-w-5xl w-full">
