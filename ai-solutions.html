@@ -119,6 +119,54 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Hero Neural Animation */
+        .hero-animation-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .neural-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: core-pulse 4s infinite alternate ease-in-out;
+        }
+
+        .neural-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: ring-rotate 15s infinite linear;
+        }
+
+        .ring-1 { width: 450px; height: 350px; animation-duration: 20s; border-color: rgba(96, 165, 250, 0.1); }
+        .ring-2 { width: 550px; height: 450px; animation-duration: 25s; animation-direction: reverse; border-color: rgba(167, 139, 250, 0.1); }
+
+        @keyframes core-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+        }
+
+        @keyframes ring-rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -127,6 +175,135 @@
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Luma AI AI Button (FAB) - Positioned Bottom Right */
+        .ai-assistant-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 150;
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .ai-assistant-btn:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .ai-assistant-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at center, var(--accent-1), transparent);
+            opacity: 0.2;
+            animation: ai-pulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes ai-pulse {
+            from { transform: scale(0.9); opacity: 0.1; }
+            to { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        /* AI Chat Window - Positioned Bottom Right */
+        .ai-chat-window {
+            position: fixed;
+            bottom: 7rem;
+            right: 2rem;
+            width: 360px;
+            max-width: calc(100vw - 4rem);
+            height: 480px;
+            max-height: calc(100vh - 12rem);
+            z-index: 149;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom right;
+        }
+
+        .ai-chat-window.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 85%;
+        }
+
+        .bubble-ai {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .chat-input-mock {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 12px;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .founder-eyebrow {
+            letter-spacing: 0.5em;
+            text-indent: 0.5em; 
         }
 
         .content-wrapper {
@@ -168,6 +345,20 @@
             background: var(--accent-2);
         }
 
+        @media (max-width: 768px) {
+            .ai-assistant-btn {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 56px;
+                height: 56px;
+            }
+            .ai-chat-window {
+                right: 1.5rem;
+                bottom: 6rem;
+                width: calc(100vw - 3rem);
+            }
+        }
+
         @media (max-width: 400px) {
             .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
         }
@@ -178,6 +369,44 @@
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
         <div class="aura aura-2"></div>
+    </div>
+
+    <!-- AI Assistant Floating UI - Bottom Right -->
+    <div class="ai-assistant-btn glass-panel border-beam" id="ai-trigger">
+        <i data-lucide="sparkles" class="w-6 h-6 text-white relative z-10"></i>
+    </div>
+
+    <div class="ai-chat-window glass-panel rounded-3xl" id="ai-chat">
+        <div class="chat-header">
+            <div class="flex items-center gap-3">
+                <div class="chat-status-dot"></div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest">Luma Intelligence</h4>
+                    <span class="text-[9px] text-slate-500 uppercase tracking-tighter">Neural Engine v2.5</span>
+                </div>
+            </div>
+            <button class="p-1 hover:text-red-400 transition-colors" id="chat-close">
+                <i data-lucide="minus" class="w-4 h-4"></i>
+            </button>
+        </div>
+        <div class="chat-messages">
+            <div class="chat-bubble bubble-ai">
+                <p>Hello. I am the Luma Autonomous Interface.</p>
+            </div>
+            <div class="chat-bubble bubble-ai" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2);">
+                <p class="font-bold text-blue-400 mb-1 tracking-tight">SYSTEM STATUS:</p>
+                <p class="text-slate-300">Neural cognition modules are currently <strong>Under Development</strong>. Full interaction capabilities will be deployed in the next roadmap cycle.</p>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-mock">
+                Processing capabilities locked...
+            </div>
+        </div>
+        <!-- Watermark -->
+        <div class="px-4 pb-3 text-center">
+            <span class="text-[7px] uppercase tracking-[0.25em] text-slate-600 font-bold">Powered by Luma AI Technologies</span>
+        </div>
     </div>
 
     <div class="content-wrapper">
@@ -223,8 +452,24 @@
 
         <main>
             <!-- Hero -->
-            <section class="min-h-[70vh] md:min-screen flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center">
+            <section class="min-h-[70vh] md:min-screen flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center relative overflow-hidden">
+                <!-- Neural Animation Container -->
+                <div class="hero-animation-bg reveal">
+                    <div class="neural-core"></div>
+                    <div class="neural-ring ring-1"></div>
+                    <div class="neural-ring ring-2"></div>
+                </div>
+
                 <div class="reveal max-w-5xl w-full">
+                    <!-- Founder Attribution -->
+                    <div class="flex items-center justify-center gap-4 mb-6 md:mb-8 opacity-70">
+                        <div class="h-px w-6 md:w-12 bg-gradient-to-r from-transparent to-white/20"></div>
+                        <p class="founder-eyebrow text-[8px] md:text-[10px] font-bold uppercase text-slate-400">
+                            Founded by Sai Revanth J
+                        </p>
+                        <div class="h-px w-6 md:w-12 bg-gradient-to-l from-transparent to-white/20"></div>
+                    </div>
+
                     <span class="text-purple-400 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-6 md:mb-8">// INTELLIGENT FRONTIER</span>
                     <h1 class="hero-title text-4xl md:text-[120px] font-black tracking-tighter leading-[1.1] md:leading-[0.9] mb-8 md:mb-12 uppercase text-glow">
                         COGNITIVE <br>
@@ -390,6 +635,21 @@
     <script>
         lucide.createIcons();
 
+        // AI Chatbox Logic
+        const aiTrigger = document.getElementById('ai-trigger');
+        const aiChat = document.getElementById('ai-chat');
+        const chatClose = document.getElementById('chat-close');
+
+        aiTrigger.addEventListener('click', () => {
+            aiChat.classList.toggle('open');
+            aiTrigger.classList.toggle('scale-90');
+        });
+
+        chatClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            aiChat.classList.remove('open');
+        });
+
         // Mobile Menu Logic
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -417,6 +677,10 @@
         document.addEventListener('click', (e) => {
             if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                 toggleMenu();
+            }
+            // Close AI Chat if clicking outside
+            if (aiChat.classList.contains('open') && !aiChat.contains(e.target) && !aiTrigger.contains(e.target)) {
+                aiChat.classList.remove('open');
             }
         });
 
