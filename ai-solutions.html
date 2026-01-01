@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Solutions | LUMA Intelligence Studio</title>
     
     <!-- Favicon -->
@@ -28,6 +28,11 @@
             overflow-x: hidden;
             letter-spacing: -0.01em;
             margin: 0;
+            width: 100%;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* Fixed Background System */
@@ -44,38 +49,38 @@
             position: absolute;
             inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
             mask-image: radial-gradient(ellipse at center, black, transparent 80%);
             -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
         }
 
         .aura {
             position: absolute;
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
+            width: 90vw;
+            height: 90vw;
+            max-width: 800px;
+            max-height: 800px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3; 
+            filter: blur(60px);
+            opacity: 0.25; 
             pointer-events: none;
             will-change: transform;
             animation: aura-move 25s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-2); top: -15%; right: -5%; }
-        .aura-2 { background: var(--accent-1); bottom: -10%; left: -5%; animation-delay: -5s; }
+        .aura-1 { background: var(--accent-2); top: -10%; right: -15%; }
+        .aura-2 { background: var(--accent-1); bottom: -10%; left: -15%; animation-delay: -5s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, 30px) scale(1.05); }
         }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
         }
 
@@ -105,7 +110,7 @@
         }
 
         .text-glow {
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         
         .gradient-brand {
@@ -116,8 +121,8 @@
 
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .reveal.active {
             opacity: 1;
@@ -127,7 +132,26 @@
         .content-wrapper {
             position: relative;
             z-index: 10;
+            width: 100%;
         }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            width: calc(100% - 3rem);
+            left: 1.5rem;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.is-active .icon-close { display: block; }
+        #menu-toggle.is-active .icon-menu { display: none; }
 
         /* Active link indicator */
         .nav-link-active {
@@ -143,6 +167,10 @@
             height: 1px;
             background: var(--accent-2);
         }
+
+        @media (max-width: 400px) {
+            .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
+        }
     </style>
 </head>
 <body>
@@ -153,44 +181,60 @@
     </div>
 
     <div class="content-wrapper">
-        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
                     <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
                         <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
                     </div>
-                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
+                    <span class="text-xl font-bold tracking-tighter uppercase text-white">Luma</span>
                 </a>
                 
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
-                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
                     <a href="ai-solutions.html" class="nav-link-active hover:text-purple-400 transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-pink-400 transition-colors">Automations</a>
-                    <a href="index.html#solutions" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
                     <a href="aboutus.html" class="hover:text-purple-400 transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                    <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
                 </nav>
 
-                <button class="hidden md:block px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                    Inquire Now
-                </button>
+                <div class="flex items-center gap-3">
+                    <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Inquiry
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
+                        <i data-lucide="x" class="w-5 h-5 icon-close"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-white nav-link-active">AI</a>
+                    <a href="automations.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-blue-400">Contact Us</a>
+                </div>
             </div>
         </header>
 
         <main>
             <!-- Hero -->
-            <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-32 text-center">
-                <div class="reveal max-w-5xl">
-                    <span class="text-purple-400 font-bold text-xs tracking-[0.4em] uppercase block mb-8">// INTELLIGENT FRONTIER</span>
-                    <h1 class="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.9] mb-12">
+            <section class="min-h-[70vh] md:min-screen flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center">
+                <div class="reveal max-w-5xl w-full">
+                    <span class="text-purple-400 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-6 md:mb-8">// INTELLIGENT FRONTIER</span>
+                    <h1 class="hero-title text-4xl md:text-[120px] font-black tracking-tighter leading-[1.1] md:leading-[0.9] mb-8 md:mb-12 uppercase text-glow">
                         COGNITIVE <br>
                         <span class="gradient-brand">AUTONOMY</span>
                     </h1>
-                    <p class="text-slate-400 text-lg md:text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-16">
+                    <p class="text-slate-400 text-base md:text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-10 md:mb-16">
                         Bridging the gap between raw data and actionable wisdom through custom-trained neural architectures and generative logic.
                     </p>
                     <div class="flex justify-center">
-                        <div class="glass-panel px-8 py-4 rounded-2xl flex items-center gap-4 text-sm font-bold tracking-widest uppercase">
+                        <div class="glass-panel px-6 py-3 md:px-8 md:py-4 rounded-2xl flex items-center gap-4 text-[10px] md:text-sm font-bold tracking-widest uppercase">
                             <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                             Systems Operational: v4.2 stable
                         </div>
@@ -199,19 +243,19 @@
             </section>
 
             <!-- Capabilities Grid -->
-            <section class="py-24 px-6">
+            <section class="py-12 md:py-24 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                         <!-- NLP -->
-                        <div class="reveal glass-panel p-12 rounded-[3rem] border-beam group">
-                            <div class="w-16 h-16 glass-panel rounded-2xl flex items-center justify-center text-blue-400 mb-8 group-hover:scale-110 transition-transform">
-                                <i data-lucide="message-square" class="w-8 h-8"></i>
+                        <div class="reveal glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border-beam group">
+                            <div class="w-12 h-12 md:w-16 md:h-16 glass-panel rounded-2xl flex items-center justify-center text-blue-400 mb-6 md:mb-8 group-hover:scale-110 transition-transform">
+                                <i data-lucide="message-square" class="w-6 h-6 md:w-8 md:h-8"></i>
                             </div>
-                            <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Advanced NLP</h3>
-                            <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                                Beyond simple sentiment analysis. Our NLP engines understand context, nuance, and intent across 40+ languages, enabling seamless human-machine dialogue.
+                            <h3 class="text-2xl md:text-3xl font-bold tracking-tighter mb-4 md:mb-6 uppercase">Advanced NLP</h3>
+                            <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8">
+                                Beyond simple sentiment analysis. Our NLP engines understand context, nuance, and intent across 40+ languages.
                             </p>
-                            <ul class="space-y-4 text-sm font-medium text-slate-500 uppercase tracking-widest">
+                            <ul class="space-y-3 md:space-y-4 text-[10px] md:text-sm font-medium text-slate-500 uppercase tracking-widest">
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Semantic Search</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Real-time Translation</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Intent Classification</li>
@@ -219,15 +263,15 @@
                         </div>
 
                         <!-- Computer Vision -->
-                        <div class="reveal glass-panel p-12 rounded-[3rem] group">
-                            <div class="w-16 h-16 glass-panel rounded-2xl flex items-center justify-center text-purple-400 mb-8 group-hover:scale-110 transition-transform">
-                                <i data-lucide="eye" class="w-8 h-8"></i>
+                        <div class="reveal glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] group">
+                            <div class="w-12 h-12 md:w-16 md:h-16 glass-panel rounded-2xl flex items-center justify-center text-purple-400 mb-6 md:mb-8 group-hover:scale-110 transition-transform">
+                                <i data-lucide="eye" class="w-6 h-6 md:w-8 md:h-8"></i>
                             </div>
-                            <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Computer Vision</h3>
-                            <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                                Granting your infrastructure the power of sight. From automated quality control to spatial intelligence for robotics and logistics.
+                            <h3 class="text-2xl md:text-3xl font-bold tracking-tighter mb-4 md:mb-6 uppercase">Computer Vision</h3>
+                            <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8">
+                                Granting your infrastructure the power of sight. From automated quality control to spatial intelligence.
                             </p>
-                            <ul class="space-y-4 text-sm font-medium text-slate-500 uppercase tracking-widest">
+                            <ul class="space-y-3 md:space-y-4 text-[10px] md:text-sm font-medium text-slate-500 uppercase tracking-widest">
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Object Recognition</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Biometric Auth</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Anomaly Detection</li>
@@ -235,15 +279,15 @@
                         </div>
 
                         <!-- Predictive -->
-                        <div class="reveal glass-panel p-12 rounded-[3rem] group">
-                            <div class="w-16 h-16 glass-panel rounded-2xl flex items-center justify-center text-pink-400 mb-8 group-hover:scale-110 transition-transform">
-                                <i data-lucide="trending-up" class="w-8 h-8"></i>
+                        <div class="reveal glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] group">
+                            <div class="w-12 h-12 md:w-16 md:h-16 glass-panel rounded-2xl flex items-center justify-center text-pink-400 mb-6 md:mb-8 group-hover:scale-110 transition-transform">
+                                <i data-lucide="trending-up" class="w-6 h-6 md:w-8 md:h-8"></i>
                             </div>
-                            <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Predictive Analytics</h3>
-                            <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                                Solving problems before they manifest. We utilize historical data patterns to forecast market shifts and operational bottlenecks with 94% accuracy.
+                            <h3 class="text-2xl md:text-3xl font-bold tracking-tighter mb-4 md:mb-6 uppercase">Predictive Analytics</h3>
+                            <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8">
+                                Solving problems before they manifest. We forecast market shifts with 94% accuracy.
                             </p>
-                            <ul class="space-y-4 text-sm font-medium text-slate-500 uppercase tracking-widest">
+                            <ul class="space-y-3 md:space-y-4 text-[10px] md:text-sm font-medium text-slate-500 uppercase tracking-widest">
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Risk Assessment</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Demand Forecasting</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Churn Prevention</li>
@@ -251,15 +295,15 @@
                         </div>
 
                         <!-- Generative -->
-                        <div class="reveal glass-panel p-12 rounded-[3rem] border-beam group">
-                            <div class="w-16 h-16 glass-panel rounded-2xl flex items-center justify-center text-emerald-400 mb-8 group-hover:scale-110 transition-transform">
-                                <i data-lucide="sparkles" class="w-8 h-8"></i>
+                        <div class="reveal glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border-beam group">
+                            <div class="w-12 h-12 md:w-16 md:h-16 glass-panel rounded-2xl flex items-center justify-center text-emerald-400 mb-6 md:mb-8 group-hover:scale-110 transition-transform">
+                                <i data-lucide="sparkles" class="w-6 h-6 md:w-8 md:h-8"></i>
                             </div>
-                            <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Enterprise GenAI</h3>
-                            <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                                Deploying private LLMs and generative agents within your firewall. Create content, code, and strategy without ever risking IP leakage.
+                            <h3 class="text-2xl md:text-3xl font-bold tracking-tighter mb-4 md:mb-6 uppercase">Enterprise GenAI</h3>
+                            <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8">
+                                Deploying private LLMs within your firewall. Create strategy without risking IP leakage.
                             </p>
-                            <ul class="space-y-4 text-sm font-medium text-slate-500 uppercase tracking-widest">
+                            <ul class="space-y-3 md:space-y-4 text-[10px] md:text-sm font-medium text-slate-500 uppercase tracking-widest">
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Private Model Tuning</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> RAG Implementation</li>
                                 <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Automated Content</li>
@@ -270,41 +314,41 @@
             </section>
 
             <!-- Technical Integration -->
-            <section class="py-32 px-6">
+            <section class="py-16 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="reveal glass-panel rounded-[4rem] p-12 md:p-24 overflow-hidden relative">
+                    <div class="reveal glass-panel rounded-[2rem] md:rounded-[4rem] p-8 md:p-24 overflow-hidden relative">
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
-                        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
                             <div>
-                                <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 uppercase">Seamless <br> Integration.</h2>
-                                <p class="text-slate-400 text-lg leading-relaxed mb-10">
-                                    Our solutions aren't silos. They are designed as modular "Intelligence Plugs" that connect to your existing SAP, Salesforce, or custom internal stacks within days, not months.
+                                <h2 class="text-3xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 uppercase">Seamless <br> Integration.</h2>
+                                <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8 md:mb-10">
+                                    Our solutions connect to your existing SAP, Salesforce, or custom stacks within days.
                                 </p>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="p-6 glass-panel rounded-3xl text-center">
-                                        <span class="text-2xl font-bold block mb-1">400+</span>
-                                        <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Connectors</span>
+                                    <div class="p-4 md:p-6 glass-panel rounded-2xl md:rounded-3xl text-center">
+                                        <span class="text-xl md:text-2xl font-bold block mb-1">400+</span>
+                                        <span class="text-[8px] md:text-[10px] uppercase tracking-widest text-slate-500 font-bold">Connectors</span>
                                     </div>
-                                    <div class="p-6 glass-panel rounded-3xl text-center">
-                                        <span class="text-2xl font-bold block mb-1">&lt;15ms</span>
-                                        <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">API Latency</span>
+                                    <div class="p-4 md:p-6 glass-panel rounded-2xl md:rounded-3xl text-center">
+                                        <span class="text-xl md:text-2xl font-bold block mb-1">&lt;15ms</span>
+                                        <span class="text-[8px] md:text-[10px] uppercase tracking-widest text-slate-500 font-bold">API Latency</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="glass-panel p-8 rounded-3xl font-mono text-xs text-blue-400/80 leading-relaxed border border-blue-500/20">
+                            <div class="glass-panel p-6 md:p-8 rounded-[1.5rem] md:rounded-3xl font-mono text-[9px] md:text-xs text-blue-400/80 leading-relaxed border border-blue-500/20 overflow-x-auto">
                                 <div class="flex gap-2 mb-4">
-                                    <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
-                                    <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                                    <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
                                 </div>
-                                <div><span class="text-slate-500">// Initialize Neural Bridge</span></div>
-                                <div>const lumaAI = new LumaBridge({</div>
-                                <div class="pl-4">endpoint: "region-india-01",</div>
-                                <div class="pl-4">mode: "autonomous_gen",</div>
-                                <div class="pl-4">security: "EAL7_Quantum"</div>
-                                <div>});</div>
-                                <div class="mt-4 text-purple-400">await lumaAI.sync({ scope: 'global_ops' });</div>
-                                <div class="mt-2 text-emerald-400">&gt; Bridge Established. Thinking...</div>
+                                <div class="whitespace-nowrap"><span class="text-slate-500">// Initialize Neural Bridge</span></div>
+                                <div class="whitespace-nowrap">const lumaAI = new LumaBridge({</div>
+                                <div class="pl-4 whitespace-nowrap">endpoint: "region-india-01",</div>
+                                <div class="pl-4 whitespace-nowrap">mode: "autonomous_gen",</div>
+                                <div class="pl-4 whitespace-nowrap">security: "EAL7_Quantum"</div>
+                                <div class="whitespace-nowrap">});</div>
+                                <div class="mt-4 text-purple-400 whitespace-nowrap">await lumaAI.sync({ scope: 'global_ops' });</div>
+                                <div class="mt-2 text-emerald-400 whitespace-nowrap">&gt; Bridge Established. Thinking...</div>
                             </div>
                         </div>
                     </div>
@@ -312,31 +356,31 @@
             </section>
         </main>
 
-        <footer class="py-20 px-6 border-t border-white/10">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center justify-center md:justify-start gap-2">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
                             <div class="w-2 h-2 bg-black rounded-full"></div>
                         </div>
-                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                        <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
-                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="text-white transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-white transition-colors">Automations</a>
-                    <a href="index.html#solutions" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
                     <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-white transition-colors">Contact Us</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact Us</a>
                 </div>
 
-                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                     INDIA
                 </div>
             </div>
@@ -346,6 +390,36 @@
     <script>
         lucide.createIcons();
 
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuToggle.classList.toggle('is-active', isMenuOpen);
+            document.body.classList.toggle('menu-open', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
         // Intersection Observer for Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -353,18 +427,19 @@
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Background Parallax
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 50;
-            const y = (e.clientY / window.innerHeight - 0.5) * 50;
+            if (window.innerWidth < 1024) return;
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
             
             auras.forEach((aura, index) => {
-                const speed = (index + 1) * 0.4;
+                const speed = (index + 1) * 0.3;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
         });
