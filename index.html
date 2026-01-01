@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LUMA | The Intelligence Studio</title>
     
     <!-- Favicon -->
@@ -28,6 +28,7 @@
             overflow-x: hidden;
             letter-spacing: -0.01em;
             margin: 0;
+            width: 100%;
         }
 
         body.menu-open {
@@ -49,42 +50,42 @@
             position: absolute;
             inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 50px 50px;
-            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 85%);
             pointer-events: none;
         }
 
         /* Aura Gradients */
         .aura {
             position: absolute;
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
+            width: 80vw;
+            height: 80vw;
+            max-width: 800px;
+            max-height: 800px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35; 
+            filter: blur(60px);
+            opacity: 0.25; 
             pointer-events: none;
             will-change: transform;
             animation: aura-move 20s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-1); top: -15%; left: -10%; }
-        .aura-2 { background: var(--accent-2); bottom: -15%; right: -5%; animation-delay: -5s; }
-        .aura-3 { background: var(--accent-3); top: 40%; left: 55%; animation-delay: -10s; }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -20%; }
+        .aura-2 { background: var(--accent-2); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .aura-3 { background: var(--accent-3); top: 30%; left: 40%; animation-delay: -10s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
+            100% { transform: translate(30px, 30px) scale(1.05); }
         }
 
         /* Modern Glassmorphism */
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
         }
 
@@ -115,7 +116,7 @@
         }
 
         .text-glow {
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         
         .gradient-brand {
@@ -137,6 +138,7 @@
         .content-wrapper {
             position: relative;
             z-index: 10;
+            width: 100%;
         }
 
         /* Mobile Menu Overlay */
@@ -145,6 +147,8 @@
             pointer-events: none;
             opacity: 0;
             transform: translateY(-10px);
+            width: calc(100% - 3rem); /* Matches container padding */
+            left: 1.5rem;
         }
         #mobile-menu.open {
             opacity: 1;
@@ -155,6 +159,12 @@
         #menu-toggle .icon-close { display: none; }
         #menu-toggle.is-active .icon-close { display: block; }
         #menu-toggle.is-active .icon-menu { display: none; }
+
+        /* Smooth text scaling for ultra-small screens */
+        @media (max-width: 380px) {
+            .hero-title { font-size: 2.75rem !important; }
+            .section-title { font-size: 2.25rem !important; }
+        }
     </style>
 </head>
 <body id="home-root">
@@ -166,7 +176,7 @@
     </div>
 
     <div class="content-wrapper">
-        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-3 group cursor-pointer decoration-none">
@@ -176,7 +186,7 @@
                     <span class="text-xl font-bold tracking-tighter uppercase text-white">Luma</span>
                 </a>
                 
-                <!-- Desktop Navigation - Strictly Linked to HTML Files -->
+                <!-- Desktop Navigation -->
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
                     <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
@@ -186,7 +196,7 @@
                     <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
                 </nav>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 md:gap-4">
                     <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                         Inquiry
                     </a>
@@ -196,32 +206,32 @@
                     </button>
                 </div>
 
-                <!-- Mobile Menu - Strictly Linked to HTML Files -->
-                <div id="mobile-menu" class="absolute top-24 left-0 w-full lg:hidden glass-panel rounded-3xl p-8 flex flex-col gap-5 z-[101]">
-                    <a href="index.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Home</a>
-                    <a href="ai-solutions.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">AI</a>
-                    <a href="automations.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Automations</a>
-                    <a href="it-solutions.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">IT Solutions</a>
-                    <a href="aboutus.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">About Us</a>
-                    <a href="contactus.html" class="mobile-link text-sm font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors text-blue-400">Contact Us</a>
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300 hover:text-white transition-colors">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-blue-400">Contact Us</a>
                 </div>
             </div>
         </header>
 
         <main>
             <!-- Hero Section -->
-            <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-32 relative text-center">
-                <div class="reveal max-w-5xl">
-                    <h1 class="text-6xl md:text-[140px] font-extrabold tracking-tighter leading-[0.85] mb-12 text-glow">
+            <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-24 pb-12 relative text-center">
+                <div class="reveal max-w-5xl w-full">
+                    <h1 class="hero-title text-5xl md:text-[140px] font-extrabold tracking-tighter leading-[0.9] md:leading-[0.85] mb-8 md:mb-12 text-glow">
                         CRAFTING <br>
                         <span class="gradient-brand">PURE LOGIC</span>
                     </h1>
-                    <p class="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-light leading-relaxed mb-16 px-4">
+                    <p class="max-w-2xl mx-auto text-slate-400 text-base md:text-xl font-light leading-relaxed mb-12 md:mb-16">
                         A boutique intelligence studio specializing in high-frequency AI automation and bespoke infrastructure for the modern elite enterprise.
                     </p>
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-8">
-                        <a href="ai-solutions.html" class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest">
-                            <span class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-8">
+                        <a href="ai-solutions.html" class="group flex items-center gap-4 text-[10px] md:text-xs font-bold uppercase tracking-widest">
+                            <span class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                                 <i data-lucide="arrow-right" class="w-5 h-5"></i>
                             </span>
                             Explore Intelligence
@@ -230,78 +240,78 @@
                 </div>
             </section>
 
-            <!-- Preview Sections (IDs prefixed to prevent page conflicts) -->
-            <section id="sec-preview-content" class="py-32 px-6">
+            <!-- Preview Sections -->
+            <section id="sec-preview-content" class="py-12 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6">
-                        <div class="md:col-span-8 glass-panel rounded-[3rem] p-12 md:p-20 flex flex-col justify-between group overflow-hidden relative">
-                            <div class="absolute -top-20 -right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                                <i data-lucide="brain-cog" class="w-96 h-96"></i>
+                    <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                        <div class="md:col-span-8 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-20 flex flex-col justify-between group overflow-hidden relative min-h-[400px]">
+                            <div class="absolute -top-10 -right-10 md:-top-20 md:-right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                                <i data-lucide="brain-cog" class="w-64 h-64 md:w-96 md:h-96"></i>
                             </div>
                             <div class="relative z-10">
-                                <span class="text-blue-400 font-bold text-xs tracking-widest uppercase block mb-6">// Autonomous Logic</span>
-                                <h3 class="text-3xl md:text-6xl font-bold tracking-tighter mb-8 leading-tight">Neural Systems for <br> Complex Ops.</h3>
-                                <p class="text-slate-400 text-lg max-w-md leading-relaxed">
-                                    We build autonomous neural agents that manage global supply chains, logistics, and data compliance in real-time, removing human friction from high-stakes decision making.
+                                <span class="text-blue-400 font-bold text-[10px] tracking-widest uppercase block mb-4 md:mb-6">// Autonomous Logic</span>
+                                <h3 class="text-2xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">Neural Systems for <br class="hidden md:block"> Complex Ops.</h3>
+                                <p class="text-slate-400 text-sm md:text-lg max-w-md leading-relaxed">
+                                    We build autonomous neural agents that manage global supply chains and logistics in real-time, removing human friction.
                                 </p>
                             </div>
-                            <div class="mt-12 flex flex-wrap gap-4">
-                                <a href="ai-solutions.html" class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">AI Capabilities</a>
-                                <a href="automations.html" class="px-6 py-3 border border-white/10 rounded-xl text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Automation Roadmap</a>
+                            <div class="mt-8 md:mt-12 flex flex-wrap gap-3 md:gap-4">
+                                <a href="ai-solutions.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">AI Capabilities</a>
+                                <a href="automations.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Roadmap</a>
                             </div>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-12 flex flex-col justify-between border-beam overflow-hidden cursor-pointer" onclick="window.location.href='it-solutions.html'">
+                        <div class="md:col-span-4 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 flex flex-col justify-between border-beam overflow-hidden cursor-pointer min-h-[300px]" onclick="window.location.href='it-solutions.html'">
                             <div>
-                                <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-8">
-                                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6 md:mb-8">
+                                    <i data-lucide="shield-check" class="w-6 h-6 md:w-8 md:h-8"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold tracking-tight mb-4 uppercase">IT <br> Sovereignty</h3>
-                                <p class="text-slate-500 text-sm leading-relaxed">
-                                    Full-stack infrastructure solutions designed for sovereignty. Protecting enterprise data with Quantum-Resistant layers and zero-trust protocols.
+                                <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-4 uppercase">IT <br> Sovereignty</h3>
+                                <p class="text-slate-500 text-xs md:text-sm leading-relaxed">
+                                    Full-stack infrastructure solutions designed for sovereignty. Protecting enterprise data with zero-trust protocols.
                                 </p>
                             </div>
-                            <div class="pt-8 mt-8 border-t border-white/5">
-                                <span class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Solutions Level: EAL7+</span>
+                            <div class="pt-6 mt-6 border-t border-white/5">
+                                <span class="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase tracking-widest">Solutions Level: EAL7+</span>
                             </div>
                         </div>
 
-                        <!-- Mini Feature Cards - Strictly Linked -->
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
-                            <i data-lucide="zap" class="w-8 h-8 text-pink-500 mb-6 transition-transform group-hover:scale-110"></i>
-                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Fast Edge</h4>
-                            <p class="text-slate-500 text-sm">Global IT infrastructure with sub-5ms latency across all major continents.</p>
+                        <!-- Mini Feature Cards -->
+                        <div class="md:col-span-4 glass-panel rounded-[2rem] md:rounded-[3rem] p-8 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
+                            <i data-lucide="zap" class="w-7 h-7 text-pink-500 mb-5"></i>
+                            <h4 class="text-lg md:text-xl font-bold mb-2 uppercase tracking-tighter">Fast Edge</h4>
+                            <p class="text-slate-500 text-xs md:text-sm">Global IT infrastructure with sub-5ms latency across all major continents.</p>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='aboutus.html'">
-                            <i data-lucide="database" class="w-8 h-8 text-blue-500 mb-6 transition-transform group-hover:scale-110"></i>
-                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">The Ethos</h4>
-                            <p class="text-slate-500 text-sm">Our studio operates at the intersection of mathematical precision and creative intelligence.</p>
+                        <div class="md:col-span-4 glass-panel rounded-[2rem] md:rounded-[3rem] p-8 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='aboutus.html'">
+                            <i data-lucide="database" class="w-7 h-7 text-blue-500 mb-5"></i>
+                            <h4 class="text-lg md:text-xl font-bold mb-2 uppercase tracking-tighter">The Ethos</h4>
+                            <p class="text-slate-500 text-xs md:text-sm">Our studio operates at the intersection of mathematical precision and creative intelligence.</p>
                         </div>
 
-                        <div class="md:col-span-4 glass-panel rounded-[3rem] p-10 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
-                            <i data-lucide="terminal" class="w-8 h-8 text-emerald-500 mb-6 transition-transform group-hover:scale-110"></i>
-                            <h4 class="text-xl font-bold mb-2 uppercase tracking-tighter">Core API</h4>
-                            <p class="text-slate-500 text-sm">Universal connectors for existing enterprise software and legacy systems.</p>
+                        <div class="md:col-span-4 glass-panel rounded-[2rem] md:rounded-[3rem] p-8 group cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='it-solutions.html'">
+                            <i data-lucide="terminal" class="w-7 h-7 text-emerald-500 mb-5"></i>
+                            <h4 class="text-lg md:text-xl font-bold mb-2 uppercase tracking-tighter">Core API</h4>
+                            <p class="text-slate-500 text-xs md:text-sm">Universal connectors for existing enterprise software and legacy systems.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Final Reach Out Section -->
-            <section id="sec-reach-out" class="py-40 px-6">
+            <section id="sec-reach-out" class="py-24 md:py-40 px-6">
                 <div class="max-w-3xl mx-auto text-center">
                     <div class="reveal">
-                        <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 text-glow">REACH OUT.</h2>
-                        <p class="text-slate-500 mb-16 text-lg max-w-lg mx-auto">Inquire about our bespoke AI and IT solutions. We partner with only four new enterprises per quarter.</p>
-                        <a href="contactus.html" class="text-2xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[16px] block truncate px-4 uppercase tracking-tighter">Open Assessment</a>
+                        <h2 class="section-title text-4xl md:text-8xl font-black tracking-tighter mb-8 md:mb-10 text-glow">REACH OUT.</h2>
+                        <p class="text-slate-500 mb-12 md:mb-16 text-sm md:text-lg max-w-lg mx-auto">Inquire about our bespoke AI and IT solutions. We partner with only four new enterprises per quarter.</p>
+                        <a href="contactus.html" class="text-xl md:text-5xl font-light hover:text-blue-400 transition-colors underline decoration-white/10 underline-offset-[12px] md:underline-offset-[16px] block truncate px-4 uppercase tracking-tighter">Open Assessment</a>
                     </div>
                 </div>
             </section>
         </main>
 
-        <footer class="py-20 px-6 border-t border-white/10">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="flex items-center justify-center md:justify-start gap-2 group decoration-none">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
@@ -310,22 +320,22 @@
                         <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
                     </a>
                     <div class="flex flex-col gap-1">
-                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
-                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <!-- Footer Navigation - Strictly Linked to HTML Files -->
-                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                <!-- Footer Navigation -->
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     <a href="index.html" class="hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
                     <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
-                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
-                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
-                    <a href="contactus.html" class="hover:text-white transition-colors">Contact Us</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact</a>
                 </div>
 
-                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                     INDIA
                 </div>
             </div>
@@ -372,20 +382,27 @@
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Background Parallax Interaction
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 60;
-            const y = (e.clientY / window.innerHeight - 0.5) * 60;
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
             
             auras.forEach((aura, index) => {
-                const speed = (index + 1) * 0.5;
+                const speed = (index + 1) * 0.4;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
+        });
+
+        // Orientation change adjustment
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024 && isMenuOpen) {
+                toggleMenu();
+            }
         });
     </script>
 </body>
