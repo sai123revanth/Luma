@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automations | LUMA Intelligence Studio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --accent-1: #3b82f6; 
+            --accent-2: #8b5cf6; 
+            --accent-3: #ec4899; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            margin: 0;
+        }
+
+        /* Fixed Background System */
+        .bg-fixed-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg);
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+        }
+
+        .aura {
+            position: absolute;
+            width: 70vw;
+            height: 70vw;
+            max-width: 900px;
+            max-height: 900px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3; 
+            pointer-events: none;
+            will-change: transform;
+            animation: aura-move 20s infinite alternate ease-in-out;
+        }
+        .aura-1 { background: var(--accent-3); top: -10%; right: -5%; }
+        .aura-2 { background: var(--accent-2); bottom: -10%; left: -5%; animation-delay: -8s; }
+
+        @keyframes aura-move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-40px, 40px) scale(1.1); }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+
+        .border-beam {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .border-beam::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 50%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: spin-beam 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spin-beam {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-brand {
+            background: linear-gradient(to right, #ffffff, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Active link indicator */
+        .nav-link-active {
+            color: white;
+            position: relative;
+        }
+        .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent-3);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-fixed-container">
+        <div class="grid-bg"></div>
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+            <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+                <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
+                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
+                    <a href="automations.html" class="nav-link-active hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-purple-400 transition-colors">About Us</a>
+                    <a href="index.html#contact" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                </nav>
+
+                <button class="hidden md:block px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    Start Automating
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero -->
+            <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-32 text-center">
+                <div class="reveal max-w-5xl">
+                    <span class="text-pink-400 font-bold text-xs tracking-[0.4em] uppercase block mb-8">// ELIMINATE FRICTION</span>
+                    <h1 class="text-6xl md:text-[130px] font-black tracking-tighter leading-[0.85] mb-12 uppercase">
+                        HYPER <br>
+                        <span class="gradient-brand">VELOCITY</span>
+                    </h1>
+                    <p class="text-slate-400 text-lg md:text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-16">
+                        Orchestrating autonomous workflows that outperform human capability. We build systems that think, act, and optimize in the background of your business.
+                    </p>
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                        <div class="glass-panel px-8 py-4 rounded-2xl flex items-center gap-4">
+                            <i data-lucide="repeat" class="w-5 h-5 text-pink-500"></i>
+                            <div class="text-left">
+                                <span class="text-[10px] text-slate-500 uppercase font-bold block">Efficiency Gain</span>
+                                <span class="text-xl font-black">+420%</span>
+                            </div>
+                        </div>
+                        <div class="glass-panel px-8 py-4 rounded-2xl flex items-center gap-4 border-beam">
+                            <i data-lucide="cpu" class="w-5 h-5 text-purple-500"></i>
+                            <div class="text-left">
+                                <span class="text-[10px] text-slate-500 uppercase font-bold block">Human-Free Ops</span>
+                                <span class="text-xl font-black">94.8%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Automation Pillars -->
+            <section class="py-24 px-6">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Workflow Orchestration -->
+                    <div class="reveal glass-panel p-12 rounded-[3.5rem] group hover:bg-white/[0.04] transition-all overflow-hidden relative">
+                        <div class="absolute -bottom-10 -right-10 opacity-[0.05] group-hover:scale-110 transition-transform">
+                            <i data-lucide="workflow" class="w-64 h-64"></i>
+                        </div>
+                        <span class="text-pink-400 text-[10px] font-bold tracking-[0.3em] uppercase block mb-6">Pillar 01</span>
+                        <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Workflow <br> Orchestration</h3>
+                        <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                            Connecting disparate enterprise tools into a singular, fluid engine. From CRM updates to multi-departmental approvals, we remove the "click" from every process.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass-panel p-4 rounded-2xl text-[10px] font-bold text-slate-500 uppercase text-center">API Driven</div>
+                            <div class="glass-panel p-4 rounded-2xl text-[10px] font-bold text-slate-500 uppercase text-center">Event Based</div>
+                        </div>
+                    </div>
+
+                    <!-- Industrial IoT -->
+                    <div class="reveal glass-panel p-12 rounded-[3.5rem] group hover:bg-white/[0.04] transition-all overflow-hidden relative border-beam">
+                        <div class="absolute -bottom-10 -right-10 opacity-[0.05] group-hover:scale-110 transition-transform">
+                            <i data-lucide="factory" class="w-64 h-64"></i>
+                        </div>
+                        <span class="text-purple-400 text-[10px] font-bold tracking-[0.3em] uppercase block mb-6">Pillar 02</span>
+                        <h3 class="text-3xl font-bold tracking-tighter mb-6 uppercase">Industrial <br> Autonomy</h3>
+                        <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                            Bridges the digital and physical. Automate warehouse logistics, manufacturing lines, and hardware monitoring with high-frequency telemetry.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass-panel p-4 rounded-2xl text-[10px] font-bold text-slate-500 uppercase text-center">IIoT Ready</div>
+                            <div class="glass-panel p-4 rounded-2xl text-[10px] font-bold text-slate-500 uppercase text-center">Edge Control</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Automation Stats -->
+            <section class="py-32 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="reveal glass-panel rounded-[4rem] p-12 md:p-24 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500"></div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                            <div>
+                                <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 uppercase leading-tight">Zero-Touch <br> Enterprise.</h2>
+                                <p class="text-slate-400 text-lg leading-relaxed mb-10">
+                                    Imagine a business that corrects its own errors, ships its own products, and reconciles its own accounts. This isn't the future—it's what we deploy for our partners today.
+                                </p>
+                                <button class="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-pink-400">
+                                    Request Automation Audit
+                                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+                                </button>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="glass-panel p-8 rounded-3xl flex justify-between items-center group cursor-pointer hover:border-pink-500/30 transition-colors">
+                                    <div>
+                                        <h4 class="font-bold text-xl mb-1">RPA 2.0</h4>
+                                        <p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Robotic Process Intelligence</p>
+                                    </div>
+                                    <i data-lucide="plus" class="w-6 h-6 text-slate-600 group-hover:rotate-90 transition-transform"></i>
+                                </div>
+                                <div class="glass-panel p-8 rounded-3xl flex justify-between items-center group cursor-pointer hover:border-purple-500/30 transition-colors">
+                                    <div>
+                                        <h4 class="font-bold text-xl mb-1">Logistics Core</h4>
+                                        <p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Autonomous Supply Chains</p>
+                                    </div>
+                                    <i data-lucide="plus" class="w-6 h-6 text-slate-600 group-hover:rotate-90 transition-transform"></i>
+                                </div>
+                                <div class="glass-panel p-8 rounded-3xl flex justify-between items-center group cursor-pointer hover:border-blue-500/30 transition-colors">
+                                    <div>
+                                        <h4 class="font-bold text-xl mb-1">Data Synthesis</h4>
+                                        <p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Self-Cleaning Data Lakes</p>
+                                    </div>
+                                    <i data-lucide="plus" class="w-6 h-6 text-slate-600 group-hover:rotate-90 transition-transform"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
+                    <a href="index.html#contact" class="hover:text-white transition-colors">Contact Us</a>
+                </div>
+
+                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                    INDIA
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Intersection Observer for Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Background Parallax
+        const auras = document.querySelectorAll('.aura');
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 50;
+            const y = (e.clientY / window.innerHeight - 0.5) * 50;
+            
+            auras.forEach((aura, index) => {
+                const speed = (index + 1) * 0.4;
+                aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

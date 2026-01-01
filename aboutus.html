@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | LUMA Intelligence Studio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --accent-1: #3b82f6; 
+            --accent-2: #8b5cf6; 
+            --accent-3: #ec4899; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            margin: 0;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Fixed Background System */
+        .bg-fixed-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg);
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+        }
+
+        .aura {
+            position: absolute;
+            width: 70vw;
+            height: 70vw;
+            max-width: 900px;
+            max-height: 900px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3; 
+            pointer-events: none;
+            will-change: transform;
+            animation: aura-move 20s infinite alternate ease-in-out;
+        }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -5%; }
+        .aura-2 { background: var(--accent-3); bottom: -10%; right: -5%; animation-delay: -7s; }
+
+        @keyframes aura-move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 40px) scale(1.05); }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+
+        .border-beam {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .border-beam::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 50%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: spin-beam 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spin-beam {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-brand {
+            background: linear-gradient(to right, #ffffff, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation active state */
+        .nav-link-active {
+            color: white;
+            position: relative;
+        }
+        .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent-1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-fixed-container">
+        <div class="grid-bg"></div>
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+            <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+                <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
+                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="index.html#ai" class="hover:text-purple-400 transition-colors">AI</a>
+                    <a href="index.html#automations" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="index.html#solutions" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="about.html" class="nav-link-active hover:text-purple-400 transition-colors">About Us</a>
+                    <a href="index.html#contact" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                </nav>
+
+                <button class="hidden md:block px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    Work with Us
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- About Hero -->
+            <section class="min-h-[80vh] flex flex-col justify-center items-center px-6 pt-32 text-center">
+                <div class="reveal max-w-4xl">
+                    <span class="text-blue-400 font-bold text-xs tracking-[0.4em] uppercase block mb-8">// THE ETHOS</span>
+                    <h1 class="text-5xl md:text-8xl font-black tracking-tighter leading-tight mb-12">
+                        DEFINING THE <br>
+                        <span class="gradient-brand">NEW INTELLIGENCE</span>
+                    </h1>
+                    <p class="text-slate-400 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
+                        LUMA is a multidisciplinary studio built to solve the complex challenges of the autonomous era. We blend raw logic with creative engineering.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Mission Section -->
+            <section class="py-24 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                        <div class="reveal">
+                            <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 text-glow">Our Core <br> Purpose.</h2>
+                            <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                                Founded in the heart of the digital transformation, LUMA exists to provide elite enterprises with the infrastructure and intelligence required to outpace the market. We believe that true automation is silent, invisible, and absolute.
+                            </p>
+                            <div class="space-y-6">
+                                <div class="flex gap-4">
+                                    <div class="w-12 h-12 glass-panel rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
+                                        <i data-lucide="target" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-1 uppercase tracking-tighter">Precision Driven</h4>
+                                        <p class="text-slate-500 text-sm">Every line of logic is optimized for maximum efficiency and zero latency.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-12 h-12 glass-panel rounded-lg flex items-center justify-center text-purple-400 flex-shrink-0">
+                                        <i data-lucide="fingerprint" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-1 uppercase tracking-tighter">Human Centric</h4>
+                                        <p class="text-slate-500 text-sm">We design systems that empower humans by removing mechanical tasks.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reveal glass-panel rounded-[3rem] p-12 aspect-square flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
+                            <div class="relative z-10 text-center">
+                                <div class="w-24 h-24 bg-white/10 rounded-full border border-white/20 flex items-center justify-center mb-6 mx-auto animate-pulse">
+                                    <i data-lucide="cpu" class="w-10 h-10 text-white"></i>
+                                </div>
+                                <span class="text-5xl font-black tracking-tighter block mb-2">99.9%</span>
+                                <span class="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">Automation Uptime</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Founders/Culture -->
+            <section class="py-32 px-6">
+                <div class="max-w-7xl mx-auto">
+                    <div class="reveal text-center mb-20">
+                        <h2 class="text-5xl font-bold tracking-tighter mb-4">THE STUDIO DNA</h2>
+                        <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-pink-500 mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Card 1 -->
+                        <div class="reveal glass-panel p-10 rounded-[2.5rem] hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">01 / Philosophy</span>
+                            <h3 class="text-2xl font-bold mb-6">Absolute <br> Sovereignty</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">
+                                We believe in building systems that grant you total ownership of your data and intellectual assets. No black boxes, no third-party dependencies.
+                            </p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="reveal glass-panel p-10 rounded-[2.5rem] border-beam hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">02 / Engineering</span>
+                            <h3 class="text-2xl font-bold mb-6">Neural <br> First Design</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">
+                                Our architecture isn't just "AI-integrated"—it is neural-native. Designed from the ground up to learn, adapt, and evolve with your business needs.
+                            </p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="reveal glass-panel p-10 rounded-[2.5rem] hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">03 / Delivery</span>
+                            <h3 class="text-2xl font-bold mb-6">Elite <br> Performance</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">
+                                We focus on a high-density, low-friction delivery model. We take on limited partners to ensure every deployment is handled with surgical precision.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Reuse Footer for Consistency -->
+        <footer class="py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
+                    <a href="index.html#ai" class="hover:text-white transition-colors">AI</a>
+                    <a href="index.html#automations" class="hover:text-white transition-colors">Automations</a>
+                    <a href="index.html#solutions" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="about.html" class="text-white transition-colors">About Us</a>
+                    <a href="index.html#contact" class="hover:text-white transition-colors">Contact Us</a>
+                </div>
+
+                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                    INDIA
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Intersection Observer for Reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Parallax Auras
+        const auras = document.querySelectorAll('.aura');
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            
+            auras.forEach((aura, index) => {
+                const speed = (index + 1) * 0.4;
+                aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
