@@ -119,6 +119,129 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Luma AI AI Button (FAB) - Positioned Bottom Right */
+        .ai-assistant-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 150;
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .ai-assistant-btn:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .ai-assistant-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at center, var(--accent-1), transparent);
+            opacity: 0.2;
+            animation: ai-pulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes ai-pulse {
+            from { transform: scale(0.9); opacity: 0.1; }
+            to { transform: scale(1.2); opacity: 0.4; }
+        }
+
+        /* AI Chat Window - Positioned Bottom Right */
+        .ai-chat-window {
+            position: fixed;
+            bottom: 7rem;
+            right: 2rem;
+            width: 360px;
+            max-width: calc(100vw - 4rem);
+            height: 480px;
+            max-height: calc(100vh - 12rem);
+            z-index: 149;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom right;
+        }
+
+        .ai-chat-window.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column; gap: 1rem;
+        }
+
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 85%;
+        }
+
+        .bubble-ai {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .chat-input-mock {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 12px;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -181,6 +304,20 @@
             background: var(--accent-1);
         }
         
+        @media (max-width: 768px) {
+            .ai-assistant-btn {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 56px;
+                height: 56px;
+            }
+            .ai-chat-window {
+                right: 1.5rem;
+                bottom: 6rem;
+                width: calc(100vw - 3rem);
+            }
+        }
+
         @media (max-width: 400px) {
             .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
         }
@@ -191,6 +328,44 @@
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
         <div class="aura aura-2"></div>
+    </div>
+
+    <!-- AI Assistant Floating UI - Bottom Right -->
+    <div class="ai-assistant-btn glass-panel border-beam" id="ai-trigger">
+        <i data-lucide="sparkles" class="w-6 h-6 text-white relative z-10"></i>
+    </div>
+
+    <div class="ai-chat-window glass-panel rounded-3xl" id="ai-chat">
+        <div class="chat-header">
+            <div class="flex items-center gap-3">
+                <div class="chat-status-dot"></div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest">Luma Intelligence</h4>
+                    <span class="text-[9px] text-slate-500 uppercase tracking-tighter">Neural Engine v2.5</span>
+                </div>
+            </div>
+            <button class="p-1 hover:text-red-400 transition-colors" id="chat-close">
+                <i data-lucide="minus" class="w-4 h-4"></i>
+            </button>
+        </div>
+        <div class="chat-messages">
+            <div class="chat-bubble bubble-ai">
+                <p>Hello. I am the Luma Autonomous Interface.</p>
+            </div>
+            <div class="chat-bubble bubble-ai" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2);">
+                <p class="font-bold text-blue-400 mb-1 tracking-tight">SYSTEM STATUS:</p>
+                <p class="text-slate-300">Neural cognition modules are currently <strong>Under Development</strong>. Full interaction capabilities will be deployed in the next roadmap cycle.</p>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-mock">
+                Processing capabilities locked...
+            </div>
+        </div>
+        <!-- Watermark -->
+        <div class="px-4 pb-3 text-center">
+            <span class="text-[7px] uppercase tracking-[0.25em] text-slate-600 font-bold">Powered by Luma AI Technologies</span>
+        </div>
     </div>
 
     <div class="content-wrapper">
@@ -345,10 +520,10 @@
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
                             <div class="w-2 h-2 bg-black rounded-full"></div>
                         </div>
-                        <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                        <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <p class="text-slate-600 text-[9px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
                         <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
@@ -358,8 +533,8 @@
                     <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
                     <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
                     <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
-                    <a href="aboutus.html" class="hover:text-white transition-colors">About</a>
-                    <a href="contactus.html" class="text-white transition-colors">Contact</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact</a>
                 </div>
 
                 <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
@@ -371,6 +546,21 @@
 
     <script>
         lucide.createIcons();
+
+        // AI Chatbox Logic
+        const aiTrigger = document.getElementById('ai-trigger');
+        const aiChat = document.getElementById('ai-chat');
+        const chatClose = document.getElementById('chat-close');
+
+        aiTrigger.addEventListener('click', () => {
+            aiChat.classList.toggle('open');
+            aiTrigger.classList.toggle('scale-90');
+        });
+
+        chatClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            aiChat.classList.remove('open');
+        });
 
         // Mobile Menu Logic
         const menuToggle = document.getElementById('menu-toggle');
@@ -400,6 +590,10 @@
             if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                 toggleMenu();
             }
+            // Close AI Chat if clicking outside
+            if (aiChat.classList.contains('open') && !aiChat.contains(e.target) && !aiTrigger.contains(e.target)) {
+                aiChat.classList.remove('open');
+            }
         });
 
         // Form Logic
@@ -424,7 +618,7 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Parallax Auras
+        // Background Parallax Auras
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
             if (window.innerWidth < 1024) return;
