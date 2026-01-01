@@ -254,11 +254,63 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
+        /* NEW: AI Tools Button - Positioned Bottom Left */
+        .ai-tools-fab-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .ai-tools-label {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.8);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 1; /* Defaultly displayed as requested */
+            transform: translateY(0); /* Defaultly displayed as requested */
+            transition: all 0.4s ease;
+        }
+
+        .ai-tools-fab-container:hover .ai-tools-label {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .ai-tools-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .ai-tools-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
         .ai-assistant-btn:hover {
             transform: scale(1.1) rotate(-5deg);
         }
 
-        .ai-assistant-btn::after {
+        .ai-assistant-btn::after, .ai-tools-btn::after {
             content: "";
             position: absolute;
             inset: 0;
@@ -363,17 +415,18 @@
 
         /* Mobile specific adjustments for AI Button */
         @media (max-width: 768px) {
-            .ai-assistant-btn {
-                bottom: 1.5rem;
-                right: 1.5rem;
+            .ai-assistant-btn, .ai-tools-btn {
                 width: 56px;
                 height: 56px;
             }
+            .ai-assistant-btn { bottom: 1.5rem; right: 1.5rem; }
+            .ai-tools-fab-container { bottom: 1.5rem; left: 1.5rem; }
             .ai-chat-window {
                 right: 1.5rem;
                 bottom: 6rem;
                 width: calc(100vw - 3rem);
             }
+            .ai-tools-label { font-size: 7px; padding: 6px 10px; }
         }
 
         .content-wrapper {
@@ -422,7 +475,17 @@
         <div class="aura aura-3"></div>
     </div>
 
-    <!-- AI Assistant Floating UI - Now Bottom Right -->
+    <!-- NEW: AI Tools Floating UI - Bottom Left -->
+    <div class="ai-tools-fab-container">
+        <div class="ai-tools-label">
+            Click here to checkout the enterprise level deployable AI tools
+        </div>
+        <a href="ai-solutions.html" class="ai-tools-btn glass-panel border-beam" title="AI Tools">
+            <i data-lucide="layout-grid" class="w-6 h-6 text-white relative z-10"></i>
+        </a>
+    </div>
+
+    <!-- AI Assistant Floating UI - Bottom Right -->
     <div class="ai-assistant-btn glass-panel border-beam" id="ai-trigger">
         <i data-lucide="sparkles" class="w-6 h-6 text-white relative z-10"></i>
     </div>
