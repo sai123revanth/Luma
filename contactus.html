@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth overflow-x-hidden">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -21,17 +21,18 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        /* Prevent all horizontal scrolling at the root */
-        html, body {
+        body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
             color: #ffffff;
-            margin: 0;
-            padding: 0;
-            width: 100%;
             overflow-x: hidden;
-            position: relative;
             letter-spacing: -0.01em;
+            margin: 0;
+            width: 100%;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* Fixed Background System */
@@ -51,43 +52,41 @@
                 linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
             background-size: 40px 40px;
-            mask-image: radial-gradient(ellipse at center, black, transparent 85%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 85%);
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
         }
 
         .aura {
             position: absolute;
-            width: 80vw;
-            height: 80vw;
+            width: 90vw;
+            height: 90vw;
             max-width: 800px;
             max-height: 800px;
             border-radius: 50%;
-            filter: blur(100px);
+            filter: blur(60px);
             opacity: 0.25; 
             pointer-events: none;
             will-change: transform;
-            animation: aura-move 25s infinite alternate ease-in-out;
+            animation: aura-move 20s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-1); top: -10%; left: -10%; }
-        .aura-2 { background: var(--accent-2); bottom: -15%; right: -5%; animation-delay: -7s; }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -15%; }
+        .aura-2 { background: var(--accent-3); bottom: -10%; right: -10%; animation-delay: -7s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -40px) scale(1.1); }
+            100% { transform: translate(30px, 30px) scale(1.05); }
         }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
         }
 
         .border-beam {
             position: relative;
             z-index: 1;
-            /* Ensure children stay inside */
-            overflow: hidden; 
         }
         
         .border-beam::before {
@@ -110,8 +109,12 @@
             to { transform: rotate(360deg); }
         }
 
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        }
+        
         .gradient-brand {
-            background: linear-gradient(to right, #ffffff, #3b82f6, #ec4899);
+            background: linear-gradient(to right, #ffffff, #818cf8, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -130,24 +133,40 @@
             position: relative;
             z-index: 10;
             width: 100%;
-            overflow-x: hidden;
         }
 
-        /* Form Styling Fixes */
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            width: calc(100% - 3rem);
+            left: 1.5rem;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.is-active .icon-close { display: block; }
+        #menu-toggle.is-active .icon-menu { display: none; }
+
+        /* Form Controls */
         input, textarea, select {
             background: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
             width: 100%;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
         }
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--accent-1) !important;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+            background: rgba(255, 255, 255, 0.08) !important;
         }
 
-        /* Nav Link Active */
         .nav-link-active {
             color: white;
             position: relative;
@@ -161,33 +180,13 @@
             height: 1px;
             background: var(--accent-1);
         }
-
-        #success-message {
-            display: none;
-            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 640px) {
-            .hero-title {
-                font-size: clamp(2.5rem, 12vw, 4rem);
-                line-height: 1.1;
-            }
-            .section-padding {
-                padding-left: 1.25rem;
-                padding-right: 1.25rem;
-            }
-            .glass-panel {
-                border-radius: 1.5rem !important;
-            }
+        
+        @media (max-width: 400px) {
+            .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
         }
     </style>
 </head>
-<body class="antialiased">
+<body>
     <div class="bg-fixed-container">
         <div class="grid-bg"></div>
         <div class="aura aura-1"></div>
@@ -195,17 +194,17 @@
     </div>
 
     <div class="content-wrapper">
-        <header class="fixed top-0 w-full z-[100] px-4 md:px-6 py-6 md:py-8">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8">
+            <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
-                    <div class="w-9 h-9 border-beam rounded-lg glass-panel flex items-center justify-center">
-                        <div class="w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_8px_#fff]"></div>
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
                     </div>
-                    <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
+                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
                 </a>
                 
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
-                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
                     <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
                     <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
@@ -213,49 +212,65 @@
                     <a href="contactus.html" class="nav-link-active hover:text-pink-400 transition-colors">Contact Us</a>
                 </nav>
 
-                <button class="px-5 py-2.5 md:px-7 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(255,255,255,0.15)]">
-                    Inquiry
-                </button>
+                <div class="flex items-center gap-3">
+                    <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Inquiry
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
+                        <i data-lucide="x" class="w-5 h-5 icon-close"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">AI</a>
+                    <a href="automations.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-white nav-link-active">Contact Us</a>
+                </div>
             </div>
         </header>
 
         <main>
-            <!-- Hero -->
-            <section class="min-h-[60vh] md:min-h-[70vh] flex flex-col justify-center items-center px-6 pt-32 pb-12 text-center">
-                <div class="reveal max-w-4xl">
+            <!-- Contact Hero -->
+            <section class="min-h-[60vh] flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center">
+                <div class="reveal max-w-4xl w-full">
                     <span class="text-blue-400 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-6 md:mb-8">// CONNECTING INTELLIGENCE</span>
-                    <h1 class="hero-title text-5xl md:text-[110px] font-black tracking-tighter uppercase mb-8 leading-[1]">
+                    <h1 class="hero-title text-4xl md:text-[110px] font-black tracking-tighter leading-[1.1] md:leading-[1] mb-8 md:mb-10 text-glow">
                         INITIATE <br>
                         <span class="gradient-brand">DIALOGUE</span>
                     </h1>
-                    <p class="text-slate-400 text-base md:text-2xl font-light leading-relaxed max-w-2xl mx-auto px-4">
-                        We only accept four high-impact partnerships per quarter. Begin your assessment to secure a consultation slot.
+                    <p class="text-slate-400 text-base md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
+                        We accept high-impact partnerships per quarter. Begin your assessment to secure a consultation slot.
                     </p>
                 </div>
             </section>
 
-            <!-- Contact Grid -->
-            <section class="py-12 md:py-24 section-padding">
+            <!-- Contact Form Section -->
+            <section class="py-12 md:py-24 px-6">
                 <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
                     
-                    <!-- Form Section -->
+                    <!-- Form Container -->
                     <div class="lg:col-span-7 reveal">
                         <div class="glass-panel p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] border-beam">
                             <form id="contact-form" class="space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="space-y-2">
                                         <label class="text-[9px] font-bold uppercase tracking-widest text-slate-500 pl-4">Full Name</label>
-                                        <input type="text" required placeholder="Dharani" class="px-5 py-3.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl">
+                                        <input type="text" required placeholder="Dharani" class="px-5 py-3.5 rounded-xl md:rounded-2xl">
                                     </div>
                                     <div class="space-y-2">
                                         <label class="text-[9px] font-bold uppercase tracking-widest text-slate-500 pl-4">Corporate Email</label>
-                                        <input type="email" required placeholder="dharani@gmail.com" class="px-5 py-3.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl">
+                                        <input type="email" required placeholder="dharani@gmail.com" class="px-5 py-3.5 rounded-xl md:rounded-2xl">
                                     </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] font-bold uppercase tracking-widest text-slate-500 pl-4">Subject</label>
                                     <div class="relative">
-                                        <select class="px-5 py-3.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-white appearance-none cursor-pointer">
+                                        <select class="px-5 py-3.5 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-white appearance-none cursor-pointer">
                                             <option class="bg-zinc-900">AI Infrastructure Inquiry</option>
                                             <option class="bg-zinc-900">Automation Partnership</option>
                                             <option class="bg-zinc-900">IT Security Sovereignty</option>
@@ -268,55 +283,52 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[9px] font-bold uppercase tracking-widest text-slate-500 pl-4">Message</label>
-                                    <textarea rows="5" required placeholder="Describe your operational bottleneck..." class="px-5 py-3.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl resize-none"></textarea>
+                                    <textarea rows="4" required placeholder="Describe your operational bottleneck..." class="px-5 py-3.5 rounded-xl md:rounded-2xl resize-none"></textarea>
                                 </div>
-                                <button type="submit" class="w-full py-4 md:py-5 bg-white text-black font-black uppercase text-xs md:text-sm tracking-[0.2em] rounded-xl md:rounded-2xl hover:bg-blue-400 transition-colors">
+                                <button type="submit" class="w-full py-4 bg-white text-black font-black uppercase text-xs md:text-sm tracking-[0.2em] rounded-xl md:rounded-2xl hover:bg-blue-400 transition-all active:scale-[0.98]">
                                     Send Inquiry
                                 </button>
                             </form>
 
-                            <!-- Success Message -->
-                            <div id="success-message" class="hidden text-center py-12 md:py-20">
-                                <div class="w-16 h-16 md:w-20 md:h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <i data-lucide="check" class="w-8 h-8 md:w-10 md:h-10"></i>
+                            <!-- Success Message (Initially Hidden) -->
+                            <div id="success-message" class="hidden text-center py-10 md:py-16">
+                                <div class="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i data-lucide="check" class="w-8 h-8"></i>
                                 </div>
-                                <h3 class="text-2xl md:text-3xl font-bold mb-4 uppercase tracking-tighter">Transmission Received</h3>
-                                <p class="text-slate-400 text-sm md:text-base max-w-sm mx-auto">Our analysts will review your operational profile and reach out within 24 hours.</p>
-                                <button onclick="location.reload()" class="mt-8 text-[10px] font-bold uppercase tracking-widest text-blue-400 underline underline-offset-8">Send another</button>
+                                <h3 class="text-2xl font-bold mb-4 uppercase tracking-tighter">Transmission Received</h3>
+                                <p class="text-slate-400 text-sm max-w-sm mx-auto mb-8">Our analysts will review your operational profile and reach out within 24 hours.</p>
+                                <button onclick="location.reload()" class="text-[10px] font-bold uppercase tracking-widest text-blue-400 underline underline-offset-8">Send another</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Info Section -->
-                    <div class="lg:col-span-5 space-y-6 md:space-y-8 reveal">
-                        <!-- Card 1 -->
-                        <div class="glass-panel p-8 md:p-10 rounded-3xl md:rounded-[2.5rem] group hover:bg-white/[0.04] transition-all">
-                            <i data-lucide="mail" class="w-6 h-6 md:w-8 md:h-8 text-blue-400 mb-6"></i>
+                    <!-- Sidebar Info -->
+                    <div class="lg:col-span-5 space-y-6 reveal">
+                        <div class="glass-panel p-8 rounded-3xl group hover:bg-white/[0.04] transition-all">
+                            <i data-lucide="mail" class="w-7 h-7 text-blue-400 mb-6"></i>
                             <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Direct Channel</h4>
-                            <a href="mailto:studio@luma.tech" class="text-lg md:text-2xl font-bold hover:text-blue-400 transition-colors truncate block">studio@luma.tech</a>
+                            <a href="mailto:studio@luma.tech" class="text-lg md:text-xl font-bold hover:text-blue-400 transition-colors block">studio@luma.tech</a>
                         </div>
                         
-                        <!-- Card 2 -->
-                        <div class="glass-panel p-8 md:p-10 rounded-3xl md:rounded-[2.5rem] group hover:bg-white/[0.04] transition-all">
-                            <i data-lucide="globe" class="w-6 h-6 md:w-8 md:h-8 text-purple-400 mb-6"></i>
+                        <div class="glass-panel p-8 rounded-3xl group hover:bg-white/[0.04] transition-all">
+                            <i data-lucide="globe" class="w-7 h-7 text-purple-400 mb-6"></i>
                             <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Primary Hub</h4>
-                            <span class="text-lg md:text-2xl font-bold">INDIA</span>
-                            <p class="text-xs text-slate-500 mt-2 uppercase tracking-tighter font-semibold">Global Operations Hub</p>
+                            <span class="text-lg md:text-xl font-bold">INDIA</span>
+                            <p class="text-[10px] text-slate-500 mt-2 uppercase font-semibold">Global Operations Hub</p>
                         </div>
 
-                        <!-- Card 3 -->
-                        <div class="glass-panel p-8 md:p-10 rounded-3xl md:rounded-[2.5rem] group hover:bg-white/[0.04] transition-all">
-                            <i data-lucide="share-2" class="w-6 h-6 md:w-8 md:h-8 text-pink-400 mb-6"></i>
-                            <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">Global Connect</h4>
-                            <div class="flex gap-4 md:gap-6">
-                                <a href="#" class="w-10 h-10 md:w-12 md:h-12 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                    <i data-lucide="linkedin" class="w-4 h-4 md:w-5 md:h-5"></i>
+                        <div class="glass-panel p-8 rounded-3xl">
+                            <i data-lucide="share-2" class="w-7 h-7 text-pink-400 mb-6"></i>
+                            <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">Social Intelligence</h4>
+                            <div class="flex gap-4">
+                                <a href="#" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                    <i data-lucide="linkedin" class="w-4 h-4"></i>
                                 </a>
-                                <a href="#" class="w-10 h-10 md:w-12 md:h-12 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                    <i data-lucide="twitter" class="w-4 h-4 md:w-5 md:h-5"></i>
+                                <a href="#" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                    <i data-lucide="twitter" class="w-4 h-4"></i>
                                 </a>
-                                <a href="#" class="w-10 h-10 md:w-12 md:h-12 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                                    <i data-lucide="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
+                                <a href="#" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                                    <i data-lucide="instagram" class="w-4 h-4"></i>
                                 </a>
                             </div>
                         </div>
@@ -326,8 +338,8 @@
             </section>
         </main>
 
-        <footer class="py-16 md:py-20 px-6 border-t border-white/10">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 md:gap-12 text-center md:text-left">
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center justify-center md:justify-start gap-2">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
@@ -337,20 +349,20 @@
                     </div>
                     <div class="flex flex-col gap-1">
                         <p class="text-slate-600 text-[9px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
-                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.15em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
                     <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
                     <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
-                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
-                    <a href="contactus.html" class="text-white transition-colors">Contact Us</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About</a>
+                    <a href="contactus.html" class="text-white transition-colors">Contact</a>
                 </div>
 
-                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest hidden md:block">
+                <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                     INDIA
                 </div>
             </div>
@@ -358,51 +370,71 @@
     </div>
 
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Contact Form Submission Handling
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuToggle.classList.toggle('is-active', isMenuOpen);
+            document.body.classList.toggle('menu-open', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
+        // Form Logic
         const form = document.getElementById('contact-form');
         const successMessage = document.getElementById('success-message');
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             form.style.display = 'none';
-            successMessage.style.display = 'block';
-            window.scrollTo({ top: form.offsetTop - 200, behavior: 'smooth' });
+            successMessage.classList.remove('hidden');
+            window.scrollTo({ top: successMessage.offsetTop - 200, behavior: 'smooth' });
         });
 
-        // Intersection Observer for Reveal animations
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { 
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px' 
-        });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Subtle Parallax Background Effect
+        // Parallax Auras
         const auras = document.querySelectorAll('.aura');
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 1024) return; // Disable parallax on touch devices for performance
-            
-            const x = (e.clientX / window.innerWidth - 0.5) * 40;
-            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+        window.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 1024) return;
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
             
             auras.forEach((aura, index) => {
                 const speed = (index + 1) * 0.3;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
-        });
-        
-        // Handle Mobile Scroll Jitter
-        window.addEventListener('resize', () => {
-            // Recalculate any height-based elements if necessary
         });
     </script>
 </body>
