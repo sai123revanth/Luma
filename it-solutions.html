@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IT Solutions | LUMA Intelligence Studio</title>
     
     <!-- Favicon -->
@@ -28,6 +28,11 @@
             overflow-x: hidden;
             letter-spacing: -0.01em;
             margin: 0;
+            width: 100%;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* Fixed Background System */
@@ -44,38 +49,38 @@
             position: absolute;
             inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
             mask-image: radial-gradient(ellipse at center, black, transparent 80%);
             -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
         }
 
         .aura {
             position: absolute;
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
+            width: 90vw;
+            height: 90vw;
+            max-width: 800px;
+            max-height: 800px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3; 
+            filter: blur(60px);
+            opacity: 0.25; 
             pointer-events: none;
             will-change: transform;
             animation: aura-move 22s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-1); top: -10%; left: -5%; }
-        .aura-2 { background: var(--accent-3); bottom: -15%; right: 0%; animation-delay: -3s; }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -15%; }
+        .aura-2 { background: var(--accent-3); bottom: -15%; right: -5%; animation-delay: -3s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, -40px) scale(1.05); }
+            100% { transform: translate(40px, 40px) scale(1.05); }
         }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
         }
 
@@ -105,7 +110,7 @@
         }
 
         .text-glow {
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         
         .gradient-brand {
@@ -116,8 +121,8 @@
 
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .reveal.active {
             opacity: 1;
@@ -127,9 +132,27 @@
         .content-wrapper {
             position: relative;
             z-index: 10;
+            width: 100%;
         }
 
-        /* Active link indicator */
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            width: calc(100% - 3rem);
+            left: 1.5rem;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.is-active .icon-close { display: block; }
+        #menu-toggle.is-active .icon-menu { display: none; }
+
         .nav-link-active {
             color: white;
             position: relative;
@@ -143,6 +166,10 @@
             height: 1px;
             background: var(--accent-1);
         }
+
+        @media (max-width: 400px) {
+            .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
+        }
     </style>
 </head>
 <body>
@@ -153,7 +180,7 @@
     </div>
 
     <div class="content-wrapper">
-        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
                     <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
@@ -163,38 +190,54 @@
                 </a>
                 
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
-                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
                     <a href="it-solutions.html" class="nav-link-active hover:text-blue-400 transition-colors">IT Solutions</a>
                     <a href="aboutus.html" class="hover:text-purple-400 transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                    <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
                 </nav>
 
-                <button class="hidden md:block px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                    Enterprise Portal
-                </button>
+                <div class="flex items-center gap-3">
+                    <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Portal
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
+                        <i data-lucide="x" class="w-5 h-5 icon-close"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">AI</a>
+                    <a href="automations.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-white nav-link-active">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-blue-400">Contact Us</a>
+                </div>
             </div>
         </header>
 
         <main>
             <!-- Hero Section -->
-            <section class="min-h-[90vh] flex flex-col justify-center items-center px-6 pt-32 text-center">
-                <div class="reveal max-w-5xl">
-                    <span class="text-blue-400 font-bold text-xs tracking-[0.4em] uppercase block mb-8">// ARCHITECTURAL SOVEREIGNTY</span>
-                    <h1 class="text-6xl md:text-[110px] font-black tracking-tighter leading-[0.9] mb-12 uppercase">
+            <section class="min-h-[70vh] md:min-h-[90vh] flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center">
+                <div class="reveal max-w-5xl w-full">
+                    <span class="text-blue-400 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-6 md:mb-8">// ARCHITECTURAL SOVEREIGNTY</span>
+                    <h1 class="hero-title text-4xl md:text-[110px] font-black tracking-tighter leading-[1.1] md:leading-[0.9] mb-8 md:mb-12 uppercase text-glow">
                         DIGITAL <br>
                         <span class="gradient-brand">INFRASTRUCTURE</span>
                     </h1>
-                    <p class="text-slate-400 text-lg md:text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-16">
+                    <p class="text-slate-400 text-base md:text-2xl font-light leading-relaxed max-w-3xl mx-auto mb-10 md:mb-16">
                         Designing high-availability, zero-trust environments for the world's most demanding enterprises. Secure, scalable, and sovereign by design.
                     </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <div class="glass-panel px-6 py-3 rounded-xl flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase border-blue-500/20">
+                    <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+                        <div class="glass-panel px-5 py-2.5 md:px-6 md:py-3 rounded-xl flex items-center gap-3 text-[9px] md:text-[10px] font-bold tracking-widest uppercase border-blue-500/20">
                             <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
                             Tier 4 Standards
                         </div>
-                        <div class="glass-panel px-6 py-3 rounded-xl flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase border-purple-500/20">
+                        <div class="glass-panel px-5 py-2.5 md:px-6 md:py-3 rounded-xl flex items-center gap-3 text-[9px] md:text-[10px] font-bold tracking-widest uppercase border-purple-500/20">
                             <i data-lucide="zap" class="w-4 h-4 text-purple-400"></i>
                             99.999% SLA
                         </div>
@@ -203,47 +246,47 @@
             </section>
 
             <!-- Core Services -->
-            <section class="py-24 px-6">
+            <section class="py-12 md:py-24 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         <!-- Cloud Infrastructure -->
-                        <div class="reveal glass-panel p-10 rounded-[3rem] group hover:bg-white/[0.05] transition-all">
-                            <div class="w-14 h-14 glass-panel rounded-2xl flex items-center justify-center text-blue-400 mb-8">
-                                <i data-lucide="cloud" class="w-7 h-7"></i>
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] group hover:bg-white/[0.05] transition-all">
+                            <div class="w-12 h-12 md:w-14 md:h-14 glass-panel rounded-2xl flex items-center justify-center text-blue-400 mb-6 md:mb-8">
+                                <i data-lucide="cloud" class="w-6 h-6 md:w-7 md:h-7"></i>
                             </div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-4 uppercase">Hybrid Cloud</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8">
-                                Seamlessly integrate private and public clouds with our proprietary orchestration layer. Scalability without compromising data sovereignty.
+                            <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-4 uppercase">Hybrid Cloud</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-8">
+                                Seamlessly integrate private and public clouds with our proprietary orchestration layer.
                             </p>
-                            <a href="#" class="text-[10px] font-bold uppercase tracking-widest text-blue-400 flex items-center gap-2 group-hover:gap-4 transition-all">
+                            <a href="contactus.html" class="text-[10px] font-bold uppercase tracking-widest text-blue-400 flex items-center gap-2 group-hover:gap-4 transition-all">
                                 View Specs <i data-lucide="arrow-right" class="w-3 h-3"></i>
                             </a>
                         </div>
 
                         <!-- Cybersecurity -->
-                        <div class="reveal glass-panel p-10 rounded-[3rem] border-beam group hover:bg-white/[0.05] transition-all">
-                            <div class="w-14 h-14 glass-panel rounded-2xl flex items-center justify-center text-purple-400 mb-8">
-                                <i data-lucide="lock" class="w-7 h-7"></i>
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border-beam group hover:bg-white/[0.05] transition-all">
+                            <div class="w-12 h-12 md:w-14 md:h-14 glass-panel rounded-2xl flex items-center justify-center text-purple-400 mb-6 md:mb-8">
+                                <i data-lucide="lock" class="w-6 h-6 md:w-7 md:h-7"></i>
                             </div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-4 uppercase">Cyber Sovereignty</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8">
-                                Quantum-resistant encryption and zero-trust networking. We protect your most sensitive assets from tomorrow's threats, today.
+                            <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-4 uppercase">Cyber Sovereignty</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-8">
+                                Quantum-resistant encryption and zero-trust networking. We protect your assets from tomorrow's threats.
                             </p>
-                            <a href="#" class="text-[10px] font-bold uppercase tracking-widest text-purple-400 flex items-center gap-2 group-hover:gap-4 transition-all">
+                            <a href="contactus.html" class="text-[10px] font-bold uppercase tracking-widest text-purple-400 flex items-center gap-2 group-hover:gap-4 transition-all">
                                 Audit Security <i data-lucide="arrow-right" class="w-3 h-3"></i>
                             </a>
                         </div>
 
                         <!-- Data & Networking -->
-                        <div class="reveal glass-panel p-10 rounded-[3rem] group hover:bg-white/[0.05] transition-all">
-                            <div class="w-14 h-14 glass-panel rounded-2xl flex items-center justify-center text-pink-400 mb-8">
-                                <i data-lucide="network" class="w-7 h-7"></i>
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] group hover:bg-white/[0.05] transition-all">
+                            <div class="w-12 h-12 md:w-14 md:h-14 glass-panel rounded-2xl flex items-center justify-center text-pink-400 mb-6 md:mb-8">
+                                <i data-lucide="network" class="w-6 h-6 md:w-7 md:h-7"></i>
                             </div>
-                            <h3 class="text-2xl font-bold tracking-tight mb-4 uppercase">Network Edge</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8">
-                                Ultra-low latency networking optimized for global data distribution. Global CDNs with custom backbone integration.
+                            <h3 class="text-xl md:text-2xl font-bold tracking-tight mb-4 uppercase">Network Edge</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-8">
+                                Ultra-low latency networking optimized for global distribution and custom backbone integration.
                             </p>
-                            <a href="#" class="text-[10px] font-bold uppercase tracking-widest text-pink-400 flex items-center gap-2 group-hover:gap-4 transition-all">
+                            <a href="contactus.html" class="text-[10px] font-bold uppercase tracking-widest text-pink-400 flex items-center gap-2 group-hover:gap-4 transition-all">
                                 Connectivity Map <i data-lucide="arrow-right" class="w-3 h-3"></i>
                             </a>
                         </div>
@@ -252,13 +295,13 @@
             </section>
 
             <!-- Tech Stack Section -->
-            <section class="py-32 px-6">
+            <section class="py-16 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="reveal grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
                         <div>
-                            <span class="text-blue-400 font-bold text-xs tracking-[0.3em] uppercase block mb-6">// THE STACK</span>
-                            <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 uppercase">Resilient by <br> Design.</h2>
-                            <p class="text-slate-400 text-lg leading-relaxed mb-8">
+                            <span class="text-blue-400 font-bold text-[10px] md:text-xs tracking-[0.3em] uppercase block mb-6 md:mb-8">// THE STACK</span>
+                            <h2 class="text-3xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 uppercase">Resilient by <br> Design.</h2>
+                            <p class="text-slate-400 text-sm md:text-lg leading-relaxed mb-8">
                                 Our IT solutions are built on a foundation of open standards and proprietary hardening. We don't just manage systems; we build digital fortresses.
                             </p>
                             <div class="space-y-4">
@@ -266,38 +309,38 @@
                                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
                                         <i data-lucide="activity" class="w-5 h-5"></i>
                                     </div>
-                                    <span class="text-sm font-bold uppercase tracking-widest">Real-time Monitoring & Healing</span>
+                                    <span class="text-[10px] md:text-sm font-bold uppercase tracking-widest">Real-time Monitoring & Healing</span>
                                 </div>
                                 <div class="flex items-center gap-4 glass-panel p-4 rounded-2xl">
                                     <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
                                         <i data-lucide="database" class="w-5 h-5"></i>
                                     </div>
-                                    <span class="text-sm font-bold uppercase tracking-widest">Distributed Ledger Compliance</span>
+                                    <span class="text-[10px] md:text-sm font-bold uppercase tracking-widest">Distributed Ledger Compliance</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="reveal glass-panel p-8 rounded-[3rem] aspect-video relative overflow-hidden flex flex-col justify-center">
+                        <div class="reveal glass-panel p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] aspect-video relative overflow-hidden flex flex-col justify-center">
                             <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[80px]"></div>
-                            <div class="relative z-10 space-y-6">
-                                <div class="flex justify-between items-center px-4">
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global Latency Map</span>
-                                    <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Online</span>
+                            <div class="relative z-10 space-y-4 md:space-y-6">
+                                <div class="flex justify-between items-center px-2 md:px-4">
+                                    <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global Latency Map</span>
+                                    <span class="text-[9px] md:text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Online</span>
                                 </div>
                                 <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                                     <div class="h-full bg-blue-500 w-3/4 animate-pulse"></div>
                                 </div>
-                                <div class="grid grid-cols-3 gap-4">
-                                    <div class="glass-panel p-4 rounded-2xl text-center">
-                                        <span class="text-xl font-bold block">12ms</span>
-                                        <span class="text-[8px] text-slate-500 uppercase tracking-tighter">Asia-Pac</span>
+                                <div class="grid grid-cols-3 gap-2 md:gap-4">
+                                    <div class="glass-panel py-3 md:py-4 rounded-xl md:rounded-2xl text-center">
+                                        <span class="text-sm md:text-xl font-bold block">12ms</span>
+                                        <span class="text-[7px] md:text-[8px] text-slate-500 uppercase tracking-tighter">Asia-Pac</span>
                                     </div>
-                                    <div class="glass-panel p-4 rounded-2xl text-center border-beam">
-                                        <span class="text-xl font-bold block">8ms</span>
-                                        <span class="text-[8px] text-slate-500 uppercase tracking-tighter">EU-West</span>
+                                    <div class="glass-panel py-3 md:py-4 rounded-xl md:rounded-2xl text-center border-beam">
+                                        <span class="text-sm md:text-xl font-bold block">8ms</span>
+                                        <span class="text-[7px] md:text-[8px] text-slate-500 uppercase tracking-tighter">EU-West</span>
                                     </div>
-                                    <div class="glass-panel p-4 rounded-2xl text-center">
-                                        <span class="text-xl font-bold block">15ms</span>
-                                        <span class="text-[8px] text-slate-500 uppercase tracking-tighter">Americas</span>
+                                    <div class="glass-panel py-3 md:py-4 rounded-xl md:rounded-2xl text-center">
+                                        <span class="text-sm md:text-xl font-bold block">15ms</span>
+                                        <span class="text-[7px] md:text-[8px] text-slate-500 uppercase tracking-tighter">Americas</span>
                                     </div>
                                 </div>
                             </div>
@@ -307,8 +350,8 @@
             </section>
         </main>
 
-        <footer class="py-20 px-6 border-t border-white/10">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 md:gap-12 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center justify-center md:justify-start gap-2">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
@@ -317,21 +360,21 @@
                         <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
-                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
                     <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-white transition-colors">Automations</a>
+                    <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
                     <a href="it-solutions.html" class="text-white transition-colors">IT Solutions</a>
                     <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-white transition-colors">Contact Us</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact Us</a>
                 </div>
 
-                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                     INDIA
                 </div>
             </div>
@@ -341,6 +384,36 @@
     <script>
         lucide.createIcons();
 
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuToggle.classList.toggle('is-active', isMenuOpen);
+            document.body.classList.toggle('menu-open', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
         // Intersection Observer for Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -348,18 +421,19 @@
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Background Parallax
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 50;
-            const y = (e.clientY / window.innerHeight - 0.5) * 50;
+            if (window.innerWidth < 1024) return;
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
             
             auras.forEach((aura, index) => {
-                const speed = (index + 1) * 0.4;
+                const speed = (index + 1) * 0.3;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
         });
