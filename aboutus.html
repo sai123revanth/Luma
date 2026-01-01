@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>About | LUMA Intelligence Studio</title>
     
     <!-- Favicon -->
@@ -28,6 +28,7 @@
             overflow-x: hidden;
             letter-spacing: -0.01em;
             margin: 0;
+            width: 100%;
         }
 
         body.menu-open {
@@ -48,38 +49,38 @@
             position: absolute;
             inset: 0;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
             mask-image: radial-gradient(ellipse at center, black, transparent 80%);
             -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
         }
 
         .aura {
             position: absolute;
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
+            width: 90vw;
+            height: 90vw;
+            max-width: 800px;
+            max-height: 800px;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3; 
+            filter: blur(60px);
+            opacity: 0.25; 
             pointer-events: none;
             will-change: transform;
             animation: aura-move 20s infinite alternate ease-in-out;
         }
-        .aura-1 { background: var(--accent-1); top: -10%; left: -5%; }
-        .aura-2 { background: var(--accent-3); bottom: -10%; right: -5%; animation-delay: -7s; }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -15%; }
+        .aura-2 { background: var(--accent-3); bottom: -10%; right: -10%; animation-delay: -7s; }
 
         @keyframes aura-move {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 40px) scale(1.05); }
+            100% { transform: translate(30px, 30px) scale(1.05); }
         }
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
         }
 
@@ -109,7 +110,7 @@
         }
 
         .text-glow {
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         
         .gradient-brand {
@@ -131,7 +132,26 @@
         .content-wrapper {
             position: relative;
             z-index: 10;
+            width: 100%;
         }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            width: calc(100% - 3rem);
+            left: 1.5rem;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.is-active .icon-close { display: block; }
+        #menu-toggle.is-active .icon-menu { display: none; }
 
         /* Navigation active state */
         .nav-link-active {
@@ -147,6 +167,10 @@
             height: 1px;
             background: var(--accent-1);
         }
+        
+        @media (max-width: 400px) {
+            .hero-title { font-size: 2.5rem !important; line-height: 1.1 !important; }
+        }
     </style>
 </head>
 <body>
@@ -157,7 +181,7 @@
     </div>
 
     <div class="content-wrapper">
-        <header class="fixed top-0 w-full z-[100] px-6 py-8">
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8">
             <div class="max-w-7xl mx-auto flex justify-between items-center relative">
                 <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
                     <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
@@ -167,73 +191,89 @@
                 </a>
                 
                 <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
-                    <a href="index.html#home" class="hover:text-blue-400 transition-colors">Home</a>
-                    <a href="index.html#ai" class="hover:text-purple-400 transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-pink-400 transition-colors">Automations</a>
-                    <a href="index.html#solutions" class="hover:text-blue-400 transition-colors">IT Solutions</a>
-                    <a href="about.html" class="nav-link-active hover:text-purple-400 transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="nav-link-active hover:text-purple-400 transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
                 </nav>
 
-                <button class="hidden md:block px-7 py-3.5 bg-white text-black text-xs font-bold rounded-full hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                    Work with Us
-                </button>
+                <div class="flex items-center gap-3">
+                    <a href="contactus.html" class="px-5 md:px-7 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Inquiry
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
+                        <i data-lucide="x" class="w-5 h-5 icon-close"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">AI</a>
+                    <a href="automations.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-slate-300">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-white nav-link-active">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-xs font-bold tracking-widest uppercase text-blue-400">Contact Us</a>
+                </div>
             </div>
         </header>
 
         <main>
             <!-- About Hero -->
-            <section class="min-h-[80vh] flex flex-col justify-center items-center px-6 pt-32 text-center">
-                <div class="reveal max-w-4xl">
-                    <span class="text-blue-400 font-bold text-xs tracking-[0.4em] uppercase block mb-8">// THE ETHOS</span>
-                    <h1 class="text-5xl md:text-8xl font-black tracking-tighter leading-tight mb-12">
+            <section class="min-h-[70vh] flex flex-col justify-center items-center px-6 pt-24 md:pt-32 text-center">
+                <div class="reveal max-w-4xl w-full">
+                    <span class="text-blue-400 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase block mb-6 md:mb-8">// THE ETHOS</span>
+                    <h1 class="hero-title text-4xl md:text-8xl font-black tracking-tighter leading-[1.1] mb-8 md:mb-12">
                         DEFINING THE <br>
                         <span class="gradient-brand">NEW INTELLIGENCE</span>
                     </h1>
-                    <p class="text-slate-400 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
+                    <p class="text-slate-400 text-base md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
                         LUMA is a multidisciplinary studio built to solve the complex challenges of the autonomous era. We blend raw logic with creative engineering.
                     </p>
                 </div>
             </section>
 
             <!-- Mission Section -->
-            <section class="py-24 px-6">
+            <section class="py-12 md:py-24 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
                         <div class="reveal">
-                            <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-8 text-glow">Our Core <br> Purpose.</h2>
-                            <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                            <h2 class="text-3xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 text-glow">Our Core <br> Purpose.</h2>
+                            <p class="text-slate-400 text-sm md:text-lg mb-8 leading-relaxed">
                                 Founded in the heart of the digital transformation, LUMA exists to provide elite enterprises with the infrastructure and intelligence required to outpace the market. We believe that true automation is silent, invisible, and absolute.
                             </p>
                             <div class="space-y-6">
                                 <div class="flex gap-4">
-                                    <div class="w-12 h-12 glass-panel rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
-                                        <i data-lucide="target" class="w-6 h-6"></i>
+                                    <div class="w-10 h-10 md:w-12 md:h-12 glass-panel rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
+                                        <i data-lucide="target" class="w-5 h-5 md:w-6 md:h-6"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-lg mb-1 uppercase tracking-tighter">Precision Driven</h4>
-                                        <p class="text-slate-500 text-sm">Every line of logic is optimized for maximum efficiency and zero latency.</p>
+                                        <h4 class="font-bold text-base md:text-lg mb-1 uppercase tracking-tighter">Precision Driven</h4>
+                                        <p class="text-slate-500 text-xs md:text-sm">Every line of logic is optimized for maximum efficiency.</p>
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
-                                    <div class="w-12 h-12 glass-panel rounded-lg flex items-center justify-center text-purple-400 flex-shrink-0">
-                                        <i data-lucide="fingerprint" class="w-6 h-6"></i>
+                                    <div class="w-10 h-10 md:w-12 md:h-12 glass-panel rounded-lg flex items-center justify-center text-purple-400 flex-shrink-0">
+                                        <i data-lucide="fingerprint" class="w-5 h-5 md:w-6 md:h-6"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-lg mb-1 uppercase tracking-tighter">Human Centric</h4>
-                                        <p class="text-slate-500 text-sm">We design systems that empower humans by removing mechanical tasks.</p>
+                                        <h4 class="font-bold text-base md:text-lg mb-1 uppercase tracking-tighter">Human Centric</h4>
+                                        <p class="text-slate-500 text-xs md:text-sm">We design systems that empower humans by removing mechanical tasks.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="reveal glass-panel rounded-[3rem] p-12 aspect-square flex items-center justify-center relative overflow-hidden">
+                        <div class="reveal glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 aspect-square flex items-center justify-center relative overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
                             <div class="relative z-10 text-center">
-                                <div class="w-24 h-24 bg-white/10 rounded-full border border-white/20 flex items-center justify-center mb-6 mx-auto animate-pulse">
-                                    <i data-lucide="cpu" class="w-10 h-10 text-white"></i>
+                                <div class="w-16 h-16 md:w-24 md:h-24 bg-white/10 rounded-full border border-white/20 flex items-center justify-center mb-4 md:mb-6 mx-auto animate-pulse">
+                                    <i data-lucide="cpu" class="w-8 h-8 md:w-10 md:h-10 text-white"></i>
                                 </div>
-                                <span class="text-5xl font-black tracking-tighter block mb-2">99.9%</span>
-                                <span class="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">Automation Uptime</span>
+                                <span class="text-4xl md:text-5xl font-black tracking-tighter block mb-2">99.9%</span>
+                                <span class="text-[9px] uppercase tracking-[0.3em] text-slate-500 font-bold">Automation Uptime</span>
                             </div>
                         </div>
                     </div>
@@ -241,35 +281,35 @@
             </section>
 
             <!-- Founders/Culture -->
-            <section class="py-32 px-6">
+            <section class="py-16 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
-                    <div class="reveal text-center mb-20">
-                        <h2 class="text-5xl font-bold tracking-tighter mb-4">THE STUDIO DNA</h2>
-                        <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-pink-500 mx-auto rounded-full"></div>
+                    <div class="reveal text-center mb-12 md:mb-20">
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tighter mb-4">THE STUDIO DNA</h2>
+                        <div class="w-16 h-1 bg-gradient-to-r from-blue-500 to-pink-500 mx-auto rounded-full"></div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         <!-- Card 1 -->
-                        <div class="reveal glass-panel p-10 rounded-[2.5rem] hover:translate-y-[-10px] transition-all duration-500">
-                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">01 / Philosophy</span>
-                            <h3 class="text-2xl font-bold mb-6">Absolute <br> Sovereignty</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">
-                                We believe in building systems that grant you total ownership of your data and intellectual assets. No black boxes, no third-party dependencies.
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:translate-y-[-5px] md:hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest block mb-8 md:mb-12">01 / Philosophy</span>
+                            <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Absolute <br> Sovereignty</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed">
+                                We believe in building systems that grant you total ownership of your data and intellectual assets.
                             </p>
                         </div>
                         <!-- Card 2 -->
-                        <div class="reveal glass-panel p-10 rounded-[2.5rem] border-beam hover:translate-y-[-10px] transition-all duration-500">
-                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">02 / Engineering</span>
-                            <h3 class="text-2xl font-bold mb-6">Neural <br> First Design</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">
-                                Our architecture isn't just "AI-integrated"—it is neural-native. Designed from the ground up to learn, adapt, and evolve with your business needs.
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-beam hover:translate-y-[-5px] md:hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest block mb-8 md:mb-12">02 / Engineering</span>
+                            <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Neural <br> First Design</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed">
+                                Our architecture isn't just "AI-integrated"—it is neural-native. Designed to learn and adapt.
                             </p>
                         </div>
                         <!-- Card 3 -->
-                        <div class="reveal glass-panel p-10 rounded-[2.5rem] hover:translate-y-[-10px] transition-all duration-500">
-                            <span class="text-xs font-bold text-slate-600 uppercase tracking-widest block mb-12">03 / Delivery</span>
-                            <h3 class="text-2xl font-bold mb-6">Elite <br> Performance</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">
-                                We focus on a high-density, low-friction delivery model. We take on limited partners to ensure every deployment is handled with surgical precision.
+                        <div class="reveal glass-panel p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:translate-y-[-5px] md:hover:translate-y-[-10px] transition-all duration-500">
+                            <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest block mb-8 md:mb-12">03 / Delivery</span>
+                            <h3 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Elite <br> Performance</h3>
+                            <p class="text-slate-500 text-xs md:text-sm leading-relaxed">
+                                We focus on a high-density, low-friction delivery model. limited partners ensure surgical precision.
                             </p>
                         </div>
                     </div>
@@ -277,9 +317,8 @@
             </section>
         </main>
 
-        <!-- Reuse Footer for Consistency -->
-        <footer class="py-20 px-6 border-t border-white/10">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <div class="flex items-center justify-center md:justify-start gap-2">
                         <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
@@ -288,21 +327,21 @@
                         <span class="text-lg font-bold tracking-tighter uppercase">Luma</span>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
-                        <p class="text-slate-400 text-[9px] uppercase tracking-[0.2em] font-semibold">Developed and Created by Sai Revanth.J</p>
+                        <p class="text-slate-600 text-[9px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-6 md:gap-10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    <a href="index.html#home" class="hover:text-white transition-colors">Home</a>
-                    <a href="index.html#ai" class="hover:text-white transition-colors">AI</a>
-                    <a href="index.html#automations" class="hover:text-white transition-colors">Automations</a>
-                    <a href="index.html#solutions" class="hover:text-white transition-colors">IT Solutions</a>
-                    <a href="about.html" class="text-white transition-colors">About Us</a>
-                    <a href="index.html#contact" class="hover:text-white transition-colors">Contact Us</a>
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="text-white transition-colors">About</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact</a>
                 </div>
 
-                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                <div class="hidden md:block text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                     INDIA
                 </div>
             </div>
@@ -312,6 +351,36 @@
     <script>
         lucide.createIcons();
 
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuToggle.classList.toggle('is-active', isMenuOpen);
+            document.body.classList.toggle('menu-open', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
         // Intersection Observer for Reveal animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -319,18 +388,18 @@
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         // Parallax Auras
         const auras = document.querySelectorAll('.aura');
         window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 40;
-            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
             
             auras.forEach((aura, index) => {
-                const speed = (index + 1) * 0.4;
+                const speed = (index + 1) * 0.3;
                 aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
         });
