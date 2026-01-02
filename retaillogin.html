@@ -135,6 +135,21 @@
             .aura { width: 100vw; height: 100vw; filter: blur(80px); }
             .glass-panel { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         }
+
+        #auth-error {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 0.75rem;
+            border-radius: 1rem;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -171,12 +186,14 @@
                     <div class="absolute -top-32 -right-32 w-64 h-64 bg-blue-500/10 blur-[80px]"></div>
                     <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-purple-500/10 blur-[80px]"></div>
 
+                    <div id="auth-error">Authentication failed. Please check your credentials.</div>
+
                     <form class="space-y-6 relative z-10" onsubmit="return false">
                         <div class="space-y-2">
                             <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">Identity (Email)</label>
                             <div class="glass-panel rounded-2xl flex items-center px-4 transition-all input-focus-glow border-white/5">
                                 <i data-lucide="mail" class="w-4 h-4 text-slate-500 mr-3"></i>
-                                <input type="email" autocomplete="email" placeholder="name@domain.com" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
+                                <input type="email" id="email-input" autocomplete="email" placeholder="name@domain.com" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
                             </div>
                         </div>
 
@@ -187,34 +204,17 @@
                             </div>
                             <div class="glass-panel rounded-2xl flex items-center px-4 transition-all input-focus-glow border-white/5">
                                 <i data-lucide="lock" class="w-4 h-4 text-slate-500 mr-3"></i>
-                                <input type="password" autocomplete="current-password" placeholder="••••••••" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
-                                <button type="button" class="p-1 hover:text-blue-400 transition-colors opacity-50 hover:opacity-100">
-                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                <input type="password" id="password-input" autocomplete="current-password" placeholder="••••••••" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
+                                <button type="button" onclick="togglePasswordVisibility()" class="p-1 hover:text-blue-400 transition-colors opacity-50 hover:opacity-100">
+                                    <i data-lucide="eye" id="password-eye" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="pt-4 space-y-4">
-                            <button class="w-full py-4 bg-white text-black font-bold text-[11px] uppercase tracking-[0.25em] rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                        <div class="pt-4">
+                            <button id="email-login-btn" class="w-full py-4 bg-white text-black font-bold text-[11px] uppercase tracking-[0.25em] rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                                 Initialize Session
                             </button>
-                            
-                            <div class="flex items-center gap-4 py-2">
-                                <div class="h-px bg-white/10 flex-1"></div>
-                                <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Neural Link</span>
-                                <div class="h-px bg-white/10 flex-1"></div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <button class="glass-panel py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-white/10 hover:border-white/20 transition-all group">
-                                    <i data-lucide="github" class="w-4 h-4 group-hover:text-white text-slate-400 transition-colors"></i>
-                                    <span class="text-[10px] font-bold uppercase tracking-widest">Github</span>
-                                </button>
-                                <button class="glass-panel py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-white/10 hover:border-white/20 transition-all group">
-                                    <i data-lucide="globe" class="w-4 h-4 text-blue-500 group-hover:text-blue-400 transition-colors"></i>
-                                    <span class="text-[10px] font-bold uppercase tracking-widest">SSO</span>
-                                </button>
-                            </div>
                         </div>
                     </form>
                 </div>
@@ -230,8 +230,71 @@
         </footer>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Global variables provided by the environment
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const emailBtn = document.getElementById('email-login-btn');
+        const errorMsg = document.getElementById('auth-error');
+        const emailInput = document.getElementById('email-input');
+        const passwordInput = document.getElementById('password-input');
+
+        // Handle Email/Password Login
+        emailBtn.addEventListener('click', async () => {
+            errorMsg.style.display = 'none';
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                errorMsg.textContent = "Please fill in all fields.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                if (userCredential.user) {
+                    window.location.href = 'index.html'; 
+                }
+            } catch (error) {
+                console.error("Authentication Error:", error);
+                errorMsg.textContent = "Access Denied: Invalid Credentials";
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Session active for:", user.email);
+            }
+        });
+    </script>
+
     <script>
         lucide.createIcons();
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('password-input');
+            const icon = document.getElementById('password-eye');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
 
         window.addEventListener('load', () => {
             document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
