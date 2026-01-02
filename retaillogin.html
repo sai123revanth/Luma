@@ -148,7 +148,6 @@
             line-height: 1.4;
         }
 
-        /* Loading state for the button */
         .btn-loading {
             pointer-events: none;
             opacity: 0.7;
@@ -173,7 +172,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Google button specific style to handle black text if needed, but keeping LUMA vibe */
         #google-login-btn:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.2);
@@ -190,13 +188,15 @@
     <div class="relative z-10 min-h-screen flex flex-col">
         <!-- Header -->
         <header class="p-6 md:p-8 flex justify-between items-center max-w-7xl mx-auto w-full">
-            <a href="#" class="flex items-center gap-3 group">
+            <!-- Edited: Redirects to index.html -->
+            <a href="index.html" class="flex items-center gap-3 group">
                 <div class="w-8 h-8 border-beam rounded-lg glass-panel flex items-center justify-center">
                     <div class="w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_8px_#fff]"></div>
                 </div>
                 <span class="text-sm font-bold tracking-tighter uppercase">Luma</span>
             </a>
-            <a href="/" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors flex items-center gap-2 group">
+            <!-- Edited: Redirects to retailpos.html -->
+            <a href="retailpos.html" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors flex items-center gap-2 group">
                 <i data-lucide="arrow-left" class="w-3 h-3 group-hover:-translate-x-1 transition-transform"></i> Exit Portal
             </a>
         </header>
@@ -266,7 +266,7 @@
                 </div>
 
                 <p class="text-center mt-8 text-slate-600 text-[10px] font-medium uppercase tracking-[0.1em]">
-                    New Architect? <a href="#" class="text-purple-400 font-bold hover:text-purple-300 transition-colors underline decoration-purple-500/30">Request Deployment</a>
+                    New Architect? <!-- Edited: Redirects to retailpos.html --> <a href="retailpos.html" class="text-purple-400 font-bold hover:text-purple-300 transition-colors underline decoration-purple-500/30">Request Deployment</a>
                 </p>
             </div>
         </main>
@@ -299,7 +299,6 @@
             measurementId: "G-N4VTKM8SEK"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -311,14 +310,12 @@
         const passwordInput = document.getElementById('password-input');
         const forgotBtn = document.getElementById('forgot-password');
 
-        // Check for existing session
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log("Authenticated as:", user.email);
             }
         });
 
-        // Handle Email Login Submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             errorMsg.style.display = 'none';
@@ -346,7 +343,6 @@
             }
         });
 
-        // Handle Google Login
         googleBtn.addEventListener('click', async () => {
             errorMsg.style.display = 'none';
             googleBtn.classList.add('btn-loading');
@@ -363,7 +359,6 @@
                 googleBtn.classList.remove('btn-loading');
                 errorMsg.style.display = 'block';
                 
-                // Specific error for operation-not-allowed
                 if (error.code === 'auth/operation-not-allowed') {
                     errorMsg.innerHTML = "SYSTEM ERROR: Google Sign-in is disabled.<br><span class='text-[9px]'>Enable it in Firebase Console > Authentication > Sign-in method.</span>";
                 } else if (error.code === 'auth/popup-blocked') {
@@ -376,7 +371,6 @@
             }
         });
 
-        // Handle Password Reset
         forgotBtn.addEventListener('click', async () => {
             const email = emailInput.value;
             if (!email) {
@@ -398,7 +392,6 @@
     </script>
 
     <script>
-        // UI Interactions
         lucide.createIcons();
 
         function togglePasswordVisibility() {
