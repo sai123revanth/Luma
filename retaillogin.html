@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal Access | LUMA Intelligence Studio</title>
     
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-
+    
+    <!-- Scripts & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -134,11 +136,6 @@
             transform: translateY(0);
         }
 
-        @media (max-width: 640px) {
-            .aura { width: 100vw; height: 100vw; filter: blur(80px); }
-            .glass-panel { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        }
-
         #auth-error {
             display: none;
             background: rgba(239, 68, 68, 0.1);
@@ -153,6 +150,31 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
+
+        /* Loading state for the button */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.7;
+            position: relative;
+            color: transparent !important;
+        }
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-top: -8px;
+            margin-left: -8px;
+            border: 2px solid black;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -163,15 +185,15 @@
     </div>
 
     <div class="relative z-10 min-h-screen flex flex-col">
-        <!-- Minimal Nav -->
+        <!-- Header -->
         <header class="p-6 md:p-8 flex justify-between items-center max-w-7xl mx-auto w-full">
-            <a href="index.html" class="flex items-center gap-3 group">
+            <a href="#" class="flex items-center gap-3 group">
                 <div class="w-8 h-8 border-beam rounded-lg glass-panel flex items-center justify-center">
                     <div class="w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_8px_#fff]"></div>
                 </div>
                 <span class="text-sm font-bold tracking-tighter uppercase">Luma</span>
             </a>
-            <a href="retailpos.html" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors flex items-center gap-2 group">
+            <a href="/" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors flex items-center gap-2 group">
                 <i data-lucide="arrow-left" class="w-3 h-3 group-hover:-translate-x-1 transition-transform"></i> Exit Portal
             </a>
         </header>
@@ -191,23 +213,23 @@
 
                     <div id="auth-error">Authentication failed. Please check your credentials.</div>
 
-                    <form class="space-y-6 relative z-10" onsubmit="return false">
+                    <form id="login-form" class="space-y-6 relative z-10">
                         <div class="space-y-2">
                             <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 ml-1">Identity (Email)</label>
                             <div class="glass-panel rounded-2xl flex items-center px-4 transition-all input-focus-glow border-white/5">
                                 <i data-lucide="mail" class="w-4 h-4 text-slate-500 mr-3"></i>
-                                <input type="email" id="email-input" autocomplete="email" placeholder="name@domain.com" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
+                                <input type="email" id="email-input" autocomplete="email" required placeholder="name@domain.com" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
                             </div>
                         </div>
 
                         <div class="space-y-2">
                             <div class="flex justify-between items-center ml-1">
                                 <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Security Key</label>
-                                <a href="#" class="text-[9px] font-bold uppercase tracking-widest text-blue-400 hover:text-white transition-colors">Lost Access?</a>
+                                <button type="button" id="forgot-password" class="text-[9px] font-bold uppercase tracking-widest text-blue-400 hover:text-white transition-colors">Lost Access?</button>
                             </div>
                             <div class="glass-panel rounded-2xl flex items-center px-4 transition-all input-focus-glow border-white/5">
                                 <i data-lucide="lock" class="w-4 h-4 text-slate-500 mr-3"></i>
-                                <input type="password" id="password-input" autocomplete="current-password" placeholder="••••••••" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
+                                <input type="password" id="password-input" autocomplete="current-password" required placeholder="••••••••" class="bg-transparent w-full py-4 text-sm focus:outline-none text-white placeholder:text-slate-700">
                                 <button type="button" onclick="togglePasswordVisibility()" class="p-1 hover:text-blue-400 transition-colors opacity-50 hover:opacity-100">
                                     <i data-lucide="eye" id="password-eye" class="w-4 h-4"></i>
                                 </button>
@@ -215,7 +237,7 @@
                         </div>
 
                         <div class="pt-4">
-                            <button id="email-login-btn" class="w-full py-4 bg-white text-black font-bold text-[11px] uppercase tracking-[0.25em] rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                            <button type="submit" id="email-login-btn" class="w-full py-4 bg-white text-black font-bold text-[11px] uppercase tracking-[0.25em] rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
                                 Initialize Session
                             </button>
                         </div>
@@ -223,7 +245,7 @@
                 </div>
 
                 <p class="text-center mt-8 text-slate-600 text-[10px] font-medium uppercase tracking-[0.1em]">
-                    New Architect? <a href="retailpos.html" class="text-purple-400 font-bold hover:text-purple-300 transition-colors underline decoration-purple-500/30">Request Deployment</a>
+                    New Architect? <a href="#" class="text-purple-400 font-bold hover:text-purple-300 transition-colors underline decoration-purple-500/30">Request Deployment</a>
                 </p>
             </div>
         </main>
@@ -233,57 +255,121 @@
         </footer>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK Implementation -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
             getAuth, 
             signInWithEmailAndPassword,
+            sendPasswordResetEmail,
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Global variables provided by the environment
-        const firebaseConfig = JSON.parse(__firebase_config);
+        // Your specific Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAq7kgiAb2LCd5lMLGUVij8z8dWJWXKRHE",
+            authDomain: "retailposlogin.firebaseapp.com",
+            projectId: "retailposlogin",
+            storageBucket: "retailposlogin.firebasestorage.app",
+            messagingSenderId: "369042230414",
+            appId: "1:369042230414:web:86dfe7a74778393ae5cddf",
+            measurementId: "G-N4VTKM8SEK"
+        };
+
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        const loginForm = document.getElementById('login-form');
         const emailBtn = document.getElementById('email-login-btn');
         const errorMsg = document.getElementById('auth-error');
         const emailInput = document.getElementById('email-input');
         const passwordInput = document.getElementById('password-input');
+        const forgotBtn = document.getElementById('forgot-password');
 
-        // Handle Email/Password Login
-        emailBtn.addEventListener('click', async () => {
+        // Check for existing session
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Authenticated as:", user.email);
+                // Redirect if already logged in and visiting this page
+                // window.location.href = 'samplepos.html'; 
+            }
+        });
+
+        // Handle Login Submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // UI Feedback
             errorMsg.style.display = 'none';
+            emailBtn.classList.add('btn-loading');
+
             const email = emailInput.value;
             const password = passwordInput.value;
 
-            if (!email || !password) {
-                errorMsg.textContent = "Please fill in all fields.";
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Show success status before redirect
+                emailBtn.textContent = "ACCESS GRANTED";
+                emailBtn.style.backgroundColor = "#4ade80"; // Green
+                
+                setTimeout(() => {
+                    window.location.href = 'samplepos.html'; 
+                }, 800);
+
+            } catch (error) {
+                console.error("Firebase Auth Error:", error.code);
+                emailBtn.classList.remove('btn-loading');
+                
                 errorMsg.style.display = 'block';
+                
+                // Friendly error messages
+                switch(error.code) {
+                    case 'auth/invalid-credential':
+                        errorMsg.textContent = "ACCESS DENIED: Credentials mismatch.";
+                        break;
+                    case 'auth/user-not-found':
+                        errorMsg.textContent = "ACCESS DENIED: Unknown Architect Identity.";
+                        break;
+                    case 'auth/wrong-password':
+                        errorMsg.textContent = "ACCESS DENIED: Invalid Security Key.";
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMsg.textContent = "SECURITY ALERT: Account locked temporarily.";
+                        break;
+                    default:
+                        errorMsg.textContent = "SYSTEM ERROR: Authentication link failed.";
+                }
+            }
+        });
+
+        // Handle Password Reset
+        forgotBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            if (!email) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = "Input Identity (Email) to reset key.";
                 return;
             }
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                if (userCredential.user) {
-                    window.location.href = 'index.html'; 
-                }
-            } catch (error) {
-                console.error("Authentication Error:", error);
-                errorMsg.textContent = "Access Denied: Invalid Credentials";
+                await sendPasswordResetEmail(auth, email);
                 errorMsg.style.display = 'block';
-            }
-        });
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log("Session active for:", user.email);
+                errorMsg.style.backgroundColor = "rgba(59, 130, 246, 0.1)";
+                errorMsg.style.borderColor = "rgba(59, 130, 246, 0.2)";
+                errorMsg.style.color = "#60a5fa";
+                errorMsg.textContent = "Recovery link deployed to your inbox.";
+            } catch (error) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = "Failed to deploy recovery link.";
             }
         });
     </script>
 
     <script>
+        // UI Interactions
         lucide.createIcons();
 
         function togglePasswordVisibility() {
@@ -299,10 +385,12 @@
             lucide.createIcons();
         }
 
+        // Entrance animation
         window.addEventListener('load', () => {
             document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
         });
 
+        // Interactive Auras
         const auras = document.querySelectorAll('.aura');
         let mouseX = 0, mouseY = 0;
         let auraX = 0, auraY = 0;
