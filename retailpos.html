@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retail POS Architecture | LUMA Intelligence Studio</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #000000;
+            --accent-1: #3b82f6; 
+            --accent-2: #8b5cf6; 
+            --accent-3: #ec4899; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            margin: 0;
+            width: 100%;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Fixed Background System */
+        .bg-fixed-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg);
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+        }
+
+        .aura {
+            position: absolute;
+            width: 90vw;
+            height: 90vw;
+            max-width: 800px;
+            max-height: 800px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.25; 
+            pointer-events: none;
+            will-change: transform;
+            animation: aura-move 20s infinite alternate ease-in-out;
+        }
+        .aura-1 { background: var(--accent-1); top: -10%; left: -15%; }
+        .aura-2 { background: var(--accent-3); bottom: -10%; right: -10%; animation-delay: -7s; }
+
+        @keyframes aura-move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.05); }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+        }
+
+        .border-beam {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .border-beam::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 50%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: spin-beam 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spin-beam {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .gradient-brand {
+            background: linear-gradient(to right, #ffffff, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            width: calc(100% - 2rem);
+            left: 1rem;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #menu-toggle .icon-close { display: none; }
+        #menu-toggle.is-active .icon-close { display: block; }
+        #menu-toggle.is-active .icon-menu { display: none; }
+
+        .price-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .price-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .pos-cta {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+        }
+
+        /* Carousel Styles */
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+        }
+        .carousel-dot.active {
+            background-color: white;
+            width: 20px;
+        }
+
+        .feature-icon-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-fixed-container">
+        <div class="grid-bg"></div>
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+    </div>
+
+    <div class="content-wrapper relative z-10 w-full overflow-x-hidden">
+        <!-- Header -->
+        <header class="fixed top-0 w-full z-[100] px-4 md:px-6 py-6">
+            <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+                <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff]"></div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase">Luma</span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center gap-8 glass-panel px-10 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase">
+                    <a href="index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-purple-400 transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-pink-400 transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-blue-400 transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-purple-400 transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-pink-400 transition-colors">Contact Us</a>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <a href="contactus.html" class="px-5 py-2.5 md:py-3.5 bg-white text-black text-[10px] md:text-xs font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Inquiry
+                    </a>
+                    <button id="menu-toggle" class="lg:hidden glass-panel p-2.5 rounded-xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="menu" class="w-5 h-5 icon-menu"></i>
+                        <i data-lucide="x" class="w-5 h-5 icon-close"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="absolute top-20 w-full lg:hidden glass-panel rounded-3xl p-6 flex flex-col gap-4 z-[101]">
+                    <a href="index.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">Home</a>
+                    <a href="ai-solutions.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">AI</a>
+                    <a href="automations.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">Automations</a>
+                    <a href="it-solutions.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">IT Solutions</a>
+                    <a href="aboutus.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">About Us</a>
+                    <a href="contactus.html" class="mobile-link text-[10px] font-bold tracking-widest uppercase text-slate-300">Contact Us</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="w-full">
+            <!-- Hero -->
+            <section class="pt-32 pb-8 px-4 text-center">
+                <div class="reveal max-w-4xl mx-auto">
+                    <span class="text-blue-400 font-bold text-[9px] tracking-[0.4em] uppercase block mb-4 md:mb-6">// RETAIL INTELLIGENCE</span>
+                    <h1 class="text-3xl md:text-[100px] font-black tracking-tighter leading-[1.1] md:leading-[0.9] mb-6 text-white uppercase">
+                        NEURAL <br>
+                        <span class="gradient-brand">BILLING POS</span>
+                    </h1>
+                    <p class="text-slate-400 text-sm md:text-xl font-light leading-relaxed max-w-2xl mx-auto px-4">
+                        The world's first AI-integrated retail OS. Experience GST compliance, weighing-machine sync, and neural inventory in a single glass-panel interface.
+                    </p>
+                </div>
+            </section>
+
+            <!-- AI Integrated POS Explanation Section -->
+            <section class="py-12 md:py-24 px-4 bg-white/5 border-y border-white/5 relative">
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="reveal">
+                            <h2 class="text-2xl md:text-5xl font-black tracking-tighter mb-6 uppercase">WHY <span class="text-blue-400">LUMA AI?</span></h2>
+                            <p class="text-slate-400 text-sm md:text-lg mb-10 leading-relaxed">
+                                Traditional POS systems are just calculators. LUMA AI is a neural-driven partner that learns your store's behavior, automates your supply chain, and delights your customers.
+                            </p>
+                            
+                            <div class="space-y-8">
+                                <div class="flex gap-6">
+                                    <div class="w-12 h-12 shrink-0 feature-icon-box rounded-2xl flex items-center justify-center">
+                                        <i data-lucide="scan-eye" class="w-6 h-6 text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-bold text-lg mb-2">Neural Product Recognition</h4>
+                                        <p class="text-slate-500 text-sm">Add 1,000+ products in seconds. Our AI tool automatically fetches images and descriptions from the global cloud library based on your SKU name.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-6">
+                                    <div class="w-12 h-12 shrink-0 feature-icon-box rounded-2xl flex items-center justify-center">
+                                        <i data-lucide="scale" class="w-6 h-6 text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-bold text-lg mb-2">Hardware-Agnostic Sync</h4>
+                                        <p class="text-slate-500 text-sm">Directly connect weighing scales, thermal printers, and barcode scanners. No extra drivers needed—just plug and bill.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-6">
+                                    <div class="w-12 h-12 shrink-0 feature-icon-box rounded-2xl flex items-center justify-center">
+                                        <i data-lucide="message-square" class="w-6 h-6 text-pink-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white font-bold text-lg mb-2">WhatsApp Automation</h4>
+                                        <p class="text-slate-500 text-sm">Auto-send digital GST invoices, low-stock alerts to owners, and personalized offers to customers via WhatsApp API.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Mockup -->
+                        <div class="reveal relative">
+                            <div class="glass-panel rounded-[2rem] md:rounded-[3rem] p-4 md:p-8 border-beam overflow-hidden shadow-2xl">
+                                <div class="flex items-center justify-between mb-6 px-2">
+                                    <div class="flex gap-2">
+                                        <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                                    </div>
+                                    <div class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Neural POS Interface v4.0</div>
+                                </div>
+                                <!-- Mock Dashboard -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="h-24 glass-panel rounded-2xl p-4 flex flex-col justify-center">
+                                        <span class="text-[8px] text-slate-500 uppercase tracking-widest mb-1">Total Sales</span>
+                                        <span class="text-xl font-black text-white">₹84,290.00</span>
+                                    </div>
+                                    <div class="h-24 glass-panel rounded-2xl p-4 flex flex-col justify-center">
+                                        <span class="text-[8px] text-slate-500 uppercase tracking-widest mb-1">AI Stock Prediction</span>
+                                        <span class="text-sm font-bold text-green-400">+12% Demand</span>
+                                    </div>
+                                    <div class="col-span-2 h-40 glass-panel rounded-2xl p-4 flex flex-col justify-end relative overflow-hidden">
+                                        <div class="absolute inset-0 opacity-10 bg-gradient-to-tr from-blue-500 to-transparent"></div>
+                                        <i data-lucide="bar-chart-3" class="w-12 h-12 text-blue-500 absolute top-4 right-4 opacity-30"></i>
+                                        <span class="text-[8px] text-slate-500 uppercase tracking-widest mb-1">Neural Forecast</span>
+                                        <span class="text-base text-slate-300">Next restocking cycle in <span class="text-white font-bold">48 hours</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Grid -->
+            <section class="py-12 md:py-24 px-4">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+                    
+                    <!-- Core: Small Retailer -->
+                    <div class="reveal price-card glass-panel p-6 md:p-10 rounded-[2rem] flex flex-col">
+                        <div class="mb-6">
+                            <h3 class="text-[9px] font-bold uppercase tracking-[0.3em] text-blue-400 mb-2">Retail Core</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-3xl md:text-5xl font-black">₹999</span>
+                                <span class="text-slate-500 text-[10px] font-bold">/mo</span>
+                            </div>
+                            <p class="text-slate-500 text-[8px] mt-1 uppercase font-bold tracking-widest">Single Outlet Solution</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i>
+                                GST Billing (A4, A5, 3")
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i>
+                                Cloud Inventory & Stock
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i>
+                                Digital WhatsApp Invoices
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-500 line-through">
+                                Weighing Machine Sync
+                            </li>
+                        </ul>
+                        <button class="w-full py-3.5 glass-panel border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                            Initialize Core
+                        </button>
+                    </div>
+
+                    <!-- Pro: Retail Chains -->
+                    <div class="reveal price-card glass-panel p-6 md:p-10 rounded-[2.5rem] border-beam relative flex flex-col md:scale-105 z-20">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-purple-500 text-[7px] font-black uppercase tracking-[0.2em] rounded-full whitespace-nowrap">
+                            Most Deployed
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-[9px] font-bold uppercase tracking-[0.3em] text-purple-400 mb-2">Chain Pro</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-3xl md:text-5xl font-black">₹4,999</span>
+                                <span class="text-slate-500 text-[10px] font-bold">/mo</span>
+                            </div>
+                            <p class="text-slate-500 text-[8px] mt-1 uppercase font-bold tracking-widest">Multi-Store Intelligence</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i>
+                                Up to 10 Store Cloud Sync
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i>
+                                Weighing Machine Integration
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i>
+                                Dynamic UPI QR on Bills
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i>
+                                Offline Billing Engine
+                            </li>
+                        </ul>
+                        <button class="w-full py-3.5 bg-white text-black rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-purple-400 transition-all">
+                            Activate Pro
+                        </button>
+                    </div>
+
+                    <!-- Apex: Hypermarkets -->
+                    <div class="reveal price-card glass-panel p-6 md:p-10 rounded-[2rem] flex flex-col">
+                        <div class="mb-6">
+                            <h3 class="text-[9px] font-bold uppercase tracking-[0.3em] text-pink-400 mb-2">Global Apex</h3>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-3xl md:text-5xl font-black">₹8,999</span>
+                                <span class="text-slate-500 text-[10px] font-bold">/mo</span>
+                            </div>
+                            <p class="text-slate-500 text-[8px] mt-1 uppercase font-bold tracking-widest">Enterprise Sovereignty</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-pink-400"></i>
+                                AI Image Recognition Suite
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-pink-400"></i>
+                                Dedicated Support Architect
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-pink-400"></i>
+                                Custom ERP & API Access
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-pink-400"></i>
+                                Autonomous Checkout Integration
+                            </li>
+                        </ul>
+                        <button class="w-full py-3.5 glass-panel border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-pink-400 hover:text-white transition-all">
+                            Contact Apex
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Carousel Comparison Section -->
+            <section class="py-8 md:py-20 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="reveal text-center mb-10">
+                        <span class="text-purple-400 font-bold text-[8px] tracking-[0.4em] uppercase block mb-3">// ARCHITECTURAL MATRIX</span>
+                        <h2 class="text-2xl md:text-5xl font-black tracking-tighter mb-2 uppercase">RETAIL <span class="gradient-brand">CAPABILITIES</span></h2>
+                        <p class="text-slate-500 text-[8px] md:text-[10px] uppercase tracking-widest font-bold">Side-by-side performance tiers</p>
+                    </div>
+
+                    <div class="reveal relative glass-panel rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 border border-white/5 overflow-hidden">
+                        <div class="carousel-track-container overflow-hidden">
+                            <div class="carousel-track" id="comparison-carousel">
+                                
+                                <!-- Slide 1: Billing & Performance -->
+                                <div class="carousel-item">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+                                        <div class="space-y-3">
+                                            <h4 class="text-blue-400 text-[9px] font-bold uppercase tracking-widest">Core Architecture</h4>
+                                            <p class="text-white font-bold text-base">Standard Cloud</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Perfect for boutiques. 100ms billing latency. Multiple invoice sizes available.</p>
+                                        </div>
+                                        <div class="space-y-3 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-10">
+                                            <h4 class="text-purple-400 text-[9px] font-bold uppercase tracking-widest">Pro Architecture</h4>
+                                            <p class="text-white font-bold text-base">Hybrid Node</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Bill offline when internet is down. Auto-syncs when back online. High-speed multi-store data sync.</p>
+                                        </div>
+                                        <div class="space-y-3 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-10">
+                                            <h4 class="text-pink-400 text-[9px] font-bold uppercase tracking-widest">Apex Architecture</h4>
+                                            <p class="text-white font-bold text-base">Neural Core</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Sub-5ms localized processing. AI-driven auto-generation of product images and master lists via Excel.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Slide 2: Growth & CRM -->
+                                <div class="carousel-item">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+                                        <div class="space-y-3">
+                                            <h4 class="text-blue-400 text-[9px] font-bold uppercase tracking-widest">Core Growth</h4>
+                                            <p class="text-white font-bold text-base">WhatsApp Invoicing</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Save paper and delight customers. Send digital PDF receipts directly to WhatsApp numbers.</p>
+                                        </div>
+                                        <div class="space-y-3 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-10">
+                                            <h4 class="text-purple-400 text-[9px] font-bold uppercase tracking-widest">Pro Growth</h4>
+                                            <p class="text-white font-bold text-base">Predictive Marketing</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Auto-segment customers. Sends automated "We Miss You" or "Birthday Discount" WhatsApp messages.</p>
+                                        </div>
+                                        <div class="space-y-3 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-10">
+                                            <h4 class="text-pink-400 text-[9px] font-bold uppercase tracking-widest">Apex Growth</h4>
+                                            <p class="text-white font-bold text-base">E-commerce Sync</p>
+                                            <p class="text-slate-500 text-xs leading-relaxed">Synchronize your physical inventory with your mobile app or website instantly. Sell everywhere.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <div class="mt-8 md:mt-12 flex items-center justify-between">
+                            <div class="flex gap-1.5" id="carousel-dots">
+                                <div class="carousel-dot h-1 w-6 rounded-full bg-white/20 transition-all cursor-pointer active"></div>
+                                <div class="carousel-dot h-1 w-6 rounded-full bg-white/20 transition-all cursor-pointer"></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button id="prev-btn" class="w-8 h-8 md:w-10 md:h-10 glass-panel rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <button id="next-btn" class="w-8 h-8 md:w-10 md:h-10 glass-panel rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final CTA -->
+            <section class="py-12 md:py-24 px-4">
+                <div class="max-w-5xl mx-auto reveal">
+                    <div class="pos-cta glass-panel p-8 md:p-16 rounded-[2.5rem] md:rounded-[3rem] border-beam text-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 opacity-10 pointer-events-none">
+                            <i data-lucide="shopping-cart" class="w-48 h-48 -mr-16 -mt-16"></i>
+                        </div>
+
+                        <span class="inline-block px-3 py-1 border border-white/20 rounded-full text-[7px] font-black uppercase tracking-[0.3em] mb-5">Enterprise Ready</span>
+                        <h2 class="text-2xl md:text-5xl font-black tracking-tighter mb-6 uppercase">START YOUR <br><span class="gradient-brand">RETAIL TRANSFORMATION</span></h2>
+                        <p class="text-slate-400 text-xs md:text-base max-w-xl mx-auto mb-8 leading-relaxed">
+                            Join 10,000+ Indian retailers using LUMA to scale their operations. Launch your GST-integrated billing store today.
+                        </p>
+                        
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                            <button class="w-full md:w-auto px-8 py-4 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                                Enter POS Sandbox
+                            </button>
+                            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Free Demo • No Card Required</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-12 md:py-20 px-4 border-t border-white/10">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                        <p class="text-slate-400 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-semibold">Created by Sai Revanth.J</p>
+                    </div>
+                </div>
+        
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <a href="index.html" class="hover:text-white transition-colors">Home</a>
+                    <a href="ai-solutions.html" class="hover:text-white transition-colors">AI</a>
+                    <a href="automations.html" class="hover:text-white transition-colors">Automations</a>
+                    <a href="it-solutions.html" class="hover:text-white transition-colors">IT Solutions</a>
+                    <a href="aboutus.html" class="hover:text-white transition-colors">About Us</a>
+                    <a href="contactus.html" class="hover:text-white transition-colors">Contact</a>
+                </div>
+        
+                <div class="hidden md:block text-[9px] font-medium text-slate-600 uppercase tracking-widest">
+                    INDIA
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Reveal Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuToggle.classList.toggle('is-active', isMenuOpen);
+            document.body.classList.toggle('menu-open', isMenuOpen);
+        }
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+
+        // Parallax Auras
+        window.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 768) return;
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            document.querySelectorAll('.aura').forEach((aura, i) => {
+                const speed = (i + 1) * 0.2;
+                aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+
+        // Carousel Logic
+        const track = document.getElementById('comparison-carousel');
+        const slides = Array.from(track.children);
+        const dots = Array.from(document.querySelectorAll('.carousel-dot'));
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        
+        let currentSlideIndex = 0;
+        let autoPlayInterval;
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+                dot.style.backgroundColor = index === currentSlideIndex ? 'white' : 'rgba(255, 255, 255, 0.2)';
+                dot.style.width = index === currentSlideIndex ? '20px' : '6px';
+            });
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        }
+
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            resetAutoPlay();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetAutoPlay();
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlideIndex = index;
+                updateCarousel();
+                resetAutoPlay();
+            });
+        });
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(nextSlide, 6000);
+        }
+
+        function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+
+        startAutoPlay();
+    </script>
+</body>
+</html>
