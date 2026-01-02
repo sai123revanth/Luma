@@ -262,13 +262,14 @@
     <!-- Side Navigation Bar -->
     <aside class="fixed left-0 top-0 h-full w-16 md:w-20 glass-panel z-[150] border-0 border-r border-white/5 flex flex-col items-center py-8 gap-8">
         <div class="mb-4">
-            <a href="#" class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+            <a href="index.html" class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
                 <div class="w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_8px_#fff]"></div>
             </a>
         </div>
 
         <div class="flex-1 flex flex-col items-center gap-6">
-            <button onclick="openLumaChatCamera()" class="side-nav-link w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl glass-panel border-white/5 text-cyan-400">
+            <!-- Updated Sidebar Camera Button: Sets context to inventory -->
+            <button onclick="openInventoryCamera()" class="side-nav-link w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl glass-panel border-white/5 text-cyan-400">
                 <i data-lucide="camera" class="w-5 h-5"></i>
                 <span class="tooltip">Scan Item</span>
             </button>
@@ -478,6 +479,7 @@
                     <button id="luma-mic-btn" title="Voice Command" onclick="startLumaVoice()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center border-white/10 hover:border-cyan-500/50 transition-all text-slate-400 hover:text-cyan-400">
                         <i data-lucide="mic" class="w-4 h-4"></i>
                     </button>
+                    <!-- Chat Camera Button: Context already set to chat in openLumaChatCamera -->
                     <button id="luma-chat-cam-btn" title="Capture Product" onclick="openLumaChatCamera()" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center border-white/10 hover:border-cyan-500/50 transition-all text-slate-400 hover:text-cyan-400">
                         <i data-lucide="camera" class="w-4 h-4"></i>
                     </button>
@@ -592,7 +594,7 @@
     </div>
 
     <script>
-        const apiKey = "";
+        const apiKey = "AIzaSyCwsKRjOyT0d93lpjUr3lz5yEEVnrwNfIc";
 
         let products = [
             { name: 'Fresh Milk (1L)', price: 66, icon: 'droplets', color: 'text-cyan-400', category: 'Grocery' },
@@ -712,7 +714,9 @@
 
             try {
                 const result = await geminiGenerate(text || "Identify product in this image.", systemPrompt, img);
-                const rawJson = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                let rawJson = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                // CLEANUP: Remove markdown code blocks if present to prevent parse errors
+                rawJson = rawJson.replace(/```json|```/g, '').trim();
                 const data = JSON.parse(rawJson);
                 
                 addLumaChatMessage(data.message, 'ai');
@@ -788,6 +792,13 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        // Sidebar Camera: Captures and adds to inventory
+        function openInventoryCamera() {
+            cameraContext = 'inventory';
+            openCameraModal();
+        }
+
+        // Chatbot Camera: Captures and attaches to AI query
         function openLumaChatCamera() {
             cameraContext = 'chat';
             openCameraModal();
