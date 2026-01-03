@@ -467,8 +467,7 @@
     </div>
 
     <script>
-        // Configuration: Now uses the backend proxy (chat.js)
-        // Ensure your chat.js is deployed at /api/chat or equivalent path in Vercel
+        // Use standard Vercel API path. Ensure your file is at api/chat.js
         const apiPath = "/api/chat"; 
 
         let products = [
@@ -571,7 +570,7 @@
 
         function clearCart() { cart = []; renderCart(); }
 
-        // AI Logic - Redirected through Backend Proxy
+        // AI Logic - Refined for better backend error tracking
         async function sendAIMessage() {
             const input = document.getElementById('ai-input'), query = input.value.trim();
             if (!query || isAIProcessing) return;
@@ -588,12 +587,15 @@
             isAIProcessing = false;
         }
 
-        function addChatMessage(role, text) {
+        function addChatMessage(role, text, isError = false) {
             const container = document.getElementById('ai-chat-messages');
             const div = document.createElement('div');
             div.className = `ai-message flex flex-col gap-2 ${role === 'user' ? 'ml-auto items-end max-w-[85%]' : 'max-w-[85%]'}`;
+            const colorClass = isError ? 'border-red-500/30 text-red-400 bg-red-500/5' : 'border-white/5 text-slate-300';
+            const radiusClass = role === 'user' ? 'rounded-tr-none bg-violet-500/10' : 'rounded-tl-none';
+            
             div.innerHTML = `
-                <div class="glass-panel p-3 rounded-2xl ${role === 'user' ? 'rounded-tr-none bg-violet-500/10 border-violet-500/20' : 'rounded-tl-none border-white/5'} text-[9px] font-bold tracking-widest leading-relaxed text-slate-300">
+                <div class="glass-panel p-3 rounded-2xl ${radiusClass} ${colorClass} text-[9px] font-bold tracking-widest leading-relaxed">
                     ${text}
                 </div>
             `;
@@ -618,41 +620,42 @@
             if (el) el.remove();
         }
 
-        async function callLumaAI(query, retries = 5) {
-            const systemPrompt = `You are LUMA AI, the autonomous assistant for Mohan Enterprises Retail POS. 
-            You have full access to the inventory: ${JSON.stringify(products)}.
-            Current cart state: ${JSON.stringify(cart)}.
-            
-            Instructions:
-            1. Assist users with inventory queries, pricing, and cart management.
-            2. Actions:
-               - [SEARCH: term]
-               - [ADD: item name]
-               - [CATEGORY: category] (Grocery, Tech, Style, Food)
-               - [CLEAR]
-            3. Be concise. Tone: High-tech, uppercase styled.
-            4. Use exact inventory names.`;
+        async function callLumaAI(query, retries = 3) {
+            const systemPrompt = `You are LUMA AI, assistant for Mohan Enterprises Retail POS. 
+            Inventory: ${JSON.stringify(products)}.
+            Cart: ${JSON.stringify(cart)}.
+            Commands: [SEARCH: term], [ADD: item name], [CATEGORY: name], [CLEAR].
+            Tone: Precise, uppercase. Use exact item names.`;
 
             let delay = 1000;
             for (let i = 0; i < retries; i++) {
                 try {
-                    // Calling the backend proxy chat.js via /api/chat
                     const response = await fetch(apiPath, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            query: query,
-                            systemPrompt: systemPrompt
-                        })
+                        body: JSON.stringify({ query, systemPrompt })
                     });
                     
-                    if (!response.ok) throw new Error('Proxy connection failed');
+                    if (!response.ok) {
+                        const errBody = await response.text();
+                        throw new Error(`Server Error (${response.status}): ${errBody.substring(0, 50)}`);
+                    }
                     
                     const data = await response.json();
-                    // Assumes your backend returns { text: "..." } or similar
-                    return data.text || data.response || data.content || "I'm having trouble connecting to Luma Intelligence.";
+                    
+                    // Handle standard Groq/OpenAI structure or flat response
+                    const content = data.choices?.[0]?.message?.content || 
+                                    data.text || 
+                                    data.response || 
+                                    data.content;
+
+                    if (!content) throw new Error("Empty response from Luma backend.");
+                    return content;
                 } catch (err) {
-                    if (i === retries - 1) return "System Offline. Connection failed after multiple attempts.";
+                    if (i === retries - 1) {
+                        addChatMessage('ai', `Connection Error: ${err.message}`, true);
+                        return null;
+                    }
                     await new Promise(r => setTimeout(r, delay));
                     delay *= 2;
                 }
@@ -660,6 +663,8 @@
         }
 
         function processAIResponse(text) {
+            if (!text) return;
+
             const searchMatch = text.match(/\[SEARCH:\s*(.*?)\]/i);
             const addMatch = text.match(/\[ADD:\s*(.*?)\]/i);
             const categoryMatch = text.match(/\[CATEGORY:\s*(.*?)\]/i);
@@ -684,10 +689,10 @@
             if (clearMatch) clearCart();
 
             const cleanText = text.replace(/\[.*?\]/g, '').trim();
-            addChatMessage('ai', cleanText || "Request processed.");
+            addChatMessage('ai', cleanText || "SYSTEM: OPERATION EXECUTED.");
         }
 
-        // Camera Logic
+        // Camera & Modal Logic
         let videoStream = null;
         async function openInventoryCamera() {
             const v = document.getElementById('camera-feed');
@@ -716,20 +721,11 @@
         function saveNewItem() {
             const n = document.getElementById('new-item-name').value, p = parseFloat(document.getElementById('new-item-price').value), c = document.getElementById('new-item-category').value;
             if (!n || isNaN(p)) return;
-            products.unshift({ 
-                name: n, price: p, category: c, icon: 'package', color: 'text-violet-400', 
-                image: document.getElementById('captured-preview-img').src || null 
-            });
-            renderProducts(); 
-            closeInventoryModal();
+            products.unshift({ name: n, price: p, category: c, icon: 'package', color: 'text-violet-400', image: document.getElementById('captured-preview-img').src || null });
+            renderProducts(); closeInventoryModal();
         }
 
-        window.onload = () => {
-            renderProducts();
-            renderCart();
-            lucide.createIcons();
-        };
-
+        window.onload = () => { renderProducts(); renderCart(); lucide.createIcons(); };
         window.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 40, y = (e.clientY / window.innerHeight - 0.5) * 40;
             document.querySelectorAll('.aura').forEach((a, i) => a.style.transform = `translate(${x * (i + 1) * 0.5}px, ${y * (i + 1) * 0.5}px)`);
