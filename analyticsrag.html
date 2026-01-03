@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Analytics Dashboard | LUMA Intelligence Studio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --accent-1: #3b82f6; 
+            --accent-2: #8b5cf6; 
+            --accent-3: #ec4899; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            margin: 0;
+            width: 100%;
+            perspective: 1000px; /* Enable 3D space */
+        }
+
+        /* Fixed Background System */
+        .bg-fixed-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg);
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            animation: grid-fly 20s linear infinite;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 80%, transparent 100%);
+        }
+
+        @keyframes grid-fly {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        .aura {
+            position: absolute;
+            width: 90vw;
+            height: 90vw;
+            max-width: 800px;
+            max-height: 800px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3; 
+            pointer-events: none;
+            will-change: transform;
+            animation: aura-move 25s infinite alternate ease-in-out;
+        }
+        .aura-1 { background: radial-gradient(circle, var(--accent-2), transparent 70%); top: -10%; right: -15%; }
+        .aura-2 { background: radial-gradient(circle, var(--accent-1), transparent 70%); bottom: -10%; left: -15%; animation-delay: -5s; }
+
+        @keyframes aura-move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-30px, 30px) scale(1.05); }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .border-beam {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .border-beam::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: conic-gradient(from 0deg, transparent 50%, var(--accent-1), var(--accent-2), var(--accent-3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: spin-beam 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spin-beam {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Upload Zone - Enhanced Scanner */
+        .upload-zone {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
+        }
+        
+        .upload-zone:hover, .upload-zone.drag-active {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.2);
+            transform: scale(1.02);
+        }
+
+        .scanner-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent-1), var(--accent-3), transparent);
+            box-shadow: 0 0 15px var(--accent-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .upload-zone:hover .scanner-beam {
+            opacity: 1;
+            animation: scan 2s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Dashboard Charts CSS-only */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 100%;
+            padding-bottom: 20px;
+        }
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, rgba(59, 130, 246, 0.2), var(--accent-1));
+            border-radius: 4px 4px 0 0;
+            opacity: 0.8;
+            transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        .bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .bar:hover { opacity: 1; transform: scaleY(1.05); transform-origin: bottom; box-shadow: 0 0 20px var(--accent-1); }
+        .bar:hover::before { opacity: 0.3; }
+        .bar::after {
+            content: attr(data-month);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+        .bar.record-bar {
+            background: linear-gradient(to top, var(--accent-3), var(--accent-2), var(--accent-1));
+            box-shadow: 0 0 30px rgba(236,72,153,0.4);
+        }
+
+        /* Glitch Text Effect */
+        .glitch-text {
+            position: relative;
+        }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            display: none;
+        }
+        .glitch-text:hover::before {
+            display: block;
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+        }
+        .glitch-text:hover::after {
+            display: block;
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-anim-2 0.4s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+            100% { clip-path: inset(30% 0 20% 0); transform: translate(1px, -1px); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+            20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 1px); }
+            40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(50% 0 30% 0); transform: translate(1px, -1px); }
+            100% { clip-path: inset(0% 0 80% 0); transform: translate(-1px, 1px); }
+        }
+
+        /* 3D Tilt Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: transform 0.1s ease;
+        }
+        .tilt-content {
+            transform: translateZ(20px);
+        }
+
+        /* Loading Animation for n8n */
+        .n8n-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            background: var(--accent-3);
+            box-shadow: 0 0 15px var(--accent-3);
+            animation: node-pulse 0.5s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes node-pulse {
+            from { opacity: 0.4; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.3); }
+        }
+
+        .progress-bar {
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-fixed-container">
+        <div class="grid-bg"></div>
+        <div class="aura aura-1"></div>
+        <div class="aura aura-2"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="fixed top-0 w-full z-[100] px-6 py-6 md:py-8 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px]">
+            <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+                <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-10 h-10 border-beam rounded-xl glass-panel flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#fff] group-hover:scale-125 transition-transform duration-300"></div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter uppercase text-white group-hover:text-blue-400 transition-colors">Luma</span>
+                </a>
+                
+                <!-- Status & Back Button Container -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+                        <span class="text-[9px] uppercase tracking-widest text-slate-300 font-bold">n8n Gateway: Active</span>
+                    </div>
+
+                    <a href="ai-solutions.html" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors group cursor-pointer">
+                        <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Back</span>
+                        <div class="p-2 rounded-full glass-panel border border-white/10 group-hover:border-white/50 transition-all bg-white/5 group-hover:bg-white/10 group-hover:scale-110">
+                            <i data-lucide="corner-up-left" class="w-4 h-4"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col pt-32 px-6">
+            <div class="max-w-6xl mx-auto w-full flex-1 flex flex-col perspective-container">
+                
+                <!-- Intro Section -->
+                <div class="text-center mb-12 relative z-20">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 hover:bg-purple-500/20 transition-colors cursor-help">
+                        <i data-lucide="webhook" class="w-3 h-3 animate-spin-slow"></i> Powered by n8n Workflow Automation
+                    </div>
+                    <h1 class="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-4 glitch-text" data-text="DATA INTELLIGENCE HUB">
+                        Data <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 animate-gradient-x">Intelligence</span> Hub
+                    </h1>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                        Upload your raw <span class="text-white font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/10 shadow-[0_0_10px_rgba(255,255,255,0.1)]">.xlsx</span> or <span class="text-white font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/10 shadow-[0_0_10px_rgba(255,255,255,0.1)]">.csv</span> files. Our autonomous n8n pipelines will cleanse, analyze, and visualize your trends in seconds.
+                    </p>
+                </div>
+
+                <!-- Upload Interface (State 1) -->
+                <div id="upload-section" class="max-w-2xl mx-auto w-full transition-all duration-700 hover:scale-[1.02]">
+                    <div class="upload-zone glass-panel rounded-3xl p-16 text-center relative overflow-hidden group border-beam" id="drop-zone">
+                        <input type="file" id="file-input" class="hidden" accept=".xlsx, .csv, .xls">
+                        
+                        <!-- Scanner Beam -->
+                        <div class="scanner-beam"></div>
+
+                        <!-- Decorative Icons -->
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-[80px] group-hover:bg-blue-500/20 transition-all duration-500"></div>
+                        
+                        <div class="relative z-10 flex flex-col items-center gap-8 cursor-pointer" onclick="document.getElementById('file-input').click()">
+                            <div class="w-24 h-24 rounded-3xl glass-panel border border-white/10 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 relative">
+                                <div class="absolute inset-0 bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <i data-lucide="upload-cloud" class="w-10 h-10 text-white relative z-10"></i>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <h3 class="text-2xl font-bold text-white tracking-tight">Drop your Excel file here</h3>
+                                <p class="text-slate-500 text-sm font-medium">or click to browse local files</p>
+                            </div>
+
+                            <div class="flex items-center gap-6 text-[10px] uppercase tracking-widest text-slate-500 mt-4">
+                                <span class="flex items-center gap-2 group-hover:text-emerald-400 transition-colors"><i data-lucide="shield" class="w-3 h-3"></i> Encrypted</span>
+                                <span class="w-1 h-1 bg-slate-700 rounded-full"></span>
+                                <span class="flex items-center gap-2 group-hover:text-blue-400 transition-colors"><i data-lucide="zap" class="w-3 h-3"></i> Instant Process</span>
+                            </div>
+                        </div>
+
+                        <!-- Sample Data Trigger -->
+                        <div class="mt-8 relative z-20">
+                            <button onclick="event.stopPropagation(); startSimulation('luma_global_sales_q4.xlsx')" class="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-all flex items-center gap-2 mx-auto group/demo shadow-lg hover:shadow-emerald-500/20">
+                                <i data-lucide="play-circle" class="w-3.5 h-3.5 group-hover/demo:text-emerald-400 transition-colors"></i>
+                                Run Live Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Processing State (State 2 - Hidden Initially) -->
+                <div id="processing-section" class="hidden max-w-lg mx-auto w-full text-center py-12">
+                    <div class="glass-panel p-10 rounded-3xl border border-white/10 relative overflow-hidden">
+                        <!-- BG Glow -->
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+                        
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-widest text-blue-400 animate-pulse" id="process-step">Initializing n8n webhook...</span>
+                            <span class="text-xs font-mono text-white font-bold" id="process-percent">0%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden mb-8 shadow-inner">
+                            <div class="progress-bar h-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/30 w-full h-full animate-[shimmer_1s_infinite]"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Visual Pipeline -->
+                        <div class="flex justify-center items-center gap-6 text-slate-700">
+                            <div class="flex flex-col items-center gap-2 transition-all duration-300 scale-90" id="step-1">
+                                <div class="p-3 rounded-xl bg-white/5 border border-white/5"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i></div>
+                            </div>
+                            <div class="w-12 h-px bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800"></div>
+                            <div class="flex flex-col items-center gap-2 transition-all duration-300 scale-90" id="step-2">
+                                <div class="p-3 rounded-xl bg-white/5 border border-white/5"><div class="n8n-node"></div></div>
+                            </div>
+                            <div class="w-12 h-px bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800"></div>
+                            <div class="flex flex-col items-center gap-2 transition-all duration-300 scale-90" id="step-3">
+                                <div class="p-3 rounded-xl bg-white/5 border border-white/5"><i data-lucide="bar-chart-2" class="w-5 h-5"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard (State 3 - Hidden Initially) -->
+                <div id="dashboard-section" class="hidden flex-col gap-6 pb-20 opacity-0 transition-opacity duration-1000">
+                    
+                    <!-- Top Stats Row (Tilt Cards) -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="glass-panel p-6 rounded-3xl border-l-2 border-l-blue-500 relative overflow-hidden group tilt-card" data-tilt>
+                            <div class="tilt-content">
+                                <div class="absolute right-0 top-0 w-32 h-32 bg-blue-500/10 rounded-bl-full -mr-6 -mt-6 transition-all group-hover:bg-blue-500/20 blur-xl"></div>
+                                <p class="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold mb-2">Total Revenue</p>
+                                <h3 class="text-3xl font-black text-white mb-2 tracking-tight counter-anim" data-target="124592" data-prefix="$">$0</h3>
+                                <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold bg-emerald-500/10 inline-flex px-2.5 py-1 rounded-full border border-emerald-500/20">
+                                    <i data-lucide="trending-up" class="w-3 h-3"></i> +12.5%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-panel p-6 rounded-3xl border-l-2 border-l-purple-500 relative overflow-hidden group tilt-card" data-tilt>
+                            <div class="tilt-content">
+                                <div class="absolute right-0 top-0 w-32 h-32 bg-purple-500/10 rounded-bl-full -mr-6 -mt-6 transition-all group-hover:bg-purple-500/20 blur-xl"></div>
+                                <p class="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold mb-2">Active Users</p>
+                                <h3 class="text-3xl font-black text-white mb-2 tracking-tight counter-anim" data-target="8492">0</h3>
+                                <div class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold bg-emerald-500/10 inline-flex px-2.5 py-1 rounded-full border border-emerald-500/20">
+                                    <i data-lucide="users" class="w-3 h-3"></i> +5.2%
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl border-l-2 border-l-pink-500 relative overflow-hidden group tilt-card" data-tilt>
+                            <div class="tilt-content">
+                                <div class="absolute right-0 top-0 w-32 h-32 bg-pink-500/10 rounded-bl-full -mr-6 -mt-6 transition-all group-hover:bg-pink-500/20 blur-xl"></div>
+                                <p class="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold mb-2">Conversion Rate</p>
+                                <h3 class="text-3xl font-black text-white mb-2 tracking-tight counter-anim" data-target="3.8" data-suffix="%">0%</h3>
+                                <div class="flex items-center gap-1.5 text-[10px] text-red-400 font-bold bg-red-500/10 inline-flex px-2.5 py-1 rounded-full border border-red-500/20">
+                                    <i data-lucide="trending-down" class="w-3 h-3"></i> -1.1%
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-6 rounded-3xl border border-emerald-500/30 relative overflow-hidden group flex flex-col justify-center items-center text-center cursor-pointer hover:bg-emerald-900/10 transition-colors tilt-card" data-tilt>
+                            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="tilt-content">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="download" class="w-5 h-5 text-emerald-400"></i>
+                                </div>
+                                <p class="text-sm font-bold text-white mb-1">Export Report</p>
+                                <p class="text-[9px] text-slate-500 uppercase tracking-widest font-semibold">PDF generated by n8n</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Chart & Recent List -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Chart Area -->
+                        <div class="lg:col-span-2 glass-panel p-8 rounded-[2rem] border border-white/5 flex flex-col h-[600px] relative overflow-hidden group">
+                            <!-- Background Grid for Chart -->
+                            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+                            
+                            <div class="flex justify-between items-start mb-10 relative z-10">
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-1 tracking-tight">Growth Analytics</h3>
+                                    <p class="text-xs text-slate-400 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> Live projection from uploaded dataset</p>
+                                </div>
+                                <div class="flex gap-2 bg-black/20 p-1 rounded-xl border border-white/5">
+                                    <button id="btn-monthly" class="px-4 py-1.5 rounded-lg bg-white/10 text-[10px] font-bold text-white hover:bg-white/20 transition-colors shadow-sm active-view">Monthly</button>
+                                    <button id="btn-yearly" class="px-4 py-1.5 rounded-lg bg-transparent text-[10px] font-bold text-slate-400 hover:text-white transition-colors">Yearly</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Custom CSS Bar Chart -->
+                            <div class="flex-1 w-full relative pl-4 pb-4">
+                                <!-- Horizontal Guidelines -->
+                                <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pr-4 pb-6 opacity-30">
+                                    <div class="w-full h-px bg-dashed border-t border-dashed border-white/20"></div>
+                                    <div class="w-full h-px bg-dashed border-t border-dashed border-white/20"></div>
+                                    <div class="w-full h-px bg-dashed border-t border-dashed border-white/20"></div>
+                                    <div class="w-full h-px bg-dashed border-t border-dashed border-white/20"></div>
+                                </div>
+
+                                <!-- Bars Container -->
+                                <div id="chart-container" class="bar-chart w-full h-full justify-between px-2 relative z-10">
+                                    <!-- Bars will be injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Side Panel - HIGH END -->
+                        <div class="glass-panel p-6 rounded-[2rem] border border-white/5 flex flex-col relative overflow-hidden h-[600px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xs font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i> AI Insights
+                                </h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
+                                    <span class="text-[9px] font-bold uppercase text-green-400 tracking-widest">Live Feed</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar">
+                                
+                                <!-- Insight 1: Revenue -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500/5 to-transparent border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-emerald-500/20"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-400"></i></div>
+                                            <span class="text-[10px] text-emerald-200 font-bold tracking-widest">REVENUE ANOMALY</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">98.2% CONFIDENCE</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                                        Detected a significant <span class="text-white font-bold">22% spike</span> in Q4 transaction volume compared to historical baseline.
+                                    </p>
+                                    <div class="h-1 w-full bg-emerald-900/30 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-500 w-[92%] rounded-full"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Insight 2: Segmentation -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-blue-500/5 to-transparent border border-white/5 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-blue-500/20"><i data-lucide="users" class="w-3.5 h-3.5 text-blue-400"></i></div>
+                                            <span class="text-[10px] text-blue-200 font-bold tracking-widest">CLUSTERING</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono text-slate-500">Just Now</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                                        Identified new 'Power User' segment. <span class="text-white font-mono">842 users</span> show high-frequency purchasing behavior.
+                                    </p>
+                                </div>
+
+                                <!-- Insight 3: Supply Chain (Warning) -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-amber-500/5 to-transparent border border-white/5 hover:border-amber-500/30 hover:bg-amber-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-amber-500/20"><i data-lucide="package-alert" class="w-3.5 h-3.5 text-amber-400"></i></div>
+                                            <span class="text-[10px] text-amber-200 font-bold tracking-widest">INVENTORY RISK</span>
+                                        </div>
+                                        <span class="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">WARNING</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
+                                        <span class="font-mono text-amber-400">SKU-10492</span> depletion imminent. Predicted stock-out in <span class="text-white font-bold">14 days</span>.
+                                    </p>
+                                </div>
+
+                                <!-- Insight 4: Churn Prediction (Critical) -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-red-500/5 to-transparent border border-white/5 hover:border-red-500/30 hover:bg-red-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-red-500/20"><i data-lucide="user-minus" class="w-3.5 h-3.5 text-red-400"></i></div>
+                                            <span class="text-[10px] text-red-200 font-bold tracking-widest">CHURN RISK</span>
+                                        </div>
+                                        <span class="text-[9px] font-bold text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">CRITICAL</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                                        <span class="text-white font-bold">15 Enterprise accounts</span> showing disengagement signals. Retention protocol recommended.
+                                    </p>
+                                    <div class="flex items-center gap-2 text-[9px] font-mono text-slate-500">
+                                        <span>Risk Score:</span>
+                                        <div class="h-1.5 w-16 bg-red-900/30 rounded-full overflow-hidden">
+                                            <div class="h-full bg-red-500 w-[85%] rounded-full animate-pulse"></div>
+                                        </div>
+                                        <span class="text-red-400">High</span>
+                                    </div>
+                                </div>
+
+                                <!-- Insight 5: Sentiment Analysis -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-pink-500/5 to-transparent border border-white/5 hover:border-pink-500/30 hover:bg-pink-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-pink-500/20"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-pink-400"></i></div>
+                                            <span class="text-[10px] text-pink-200 font-bold tracking-widest">SENTIMENT</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono text-slate-500">-14% Score</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
+                                        Negative sentiment spike detected in 'Customer Support' logs regarding "Login Issues".
+                                    </p>
+                                </div>
+
+                                <!-- Insight 6: Geospatial -->
+                                <div class="p-4 rounded-xl bg-gradient-to-br from-purple-500/5 to-transparent border border-white/5 hover:border-purple-500/30 hover:bg-purple-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-purple-500/20"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-purple-400"></i></div>
+                                            <span class="text-[10px] text-purple-200 font-bold tracking-widest">GEOSPATIAL</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
+                                        Unusual traffic density detected in <span class="text-white font-bold">APAC Region</span> (+400% vs avg). Potential market expansion opportunity.
+                                    </p>
+                                </div>
+
+                                 <!-- Insight 7: System Health -->
+                                 <div class="p-4 rounded-xl bg-gradient-to-br from-cyan-500/5 to-transparent border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/10 transition-all cursor-default group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="p-1.5 rounded-md bg-cyan-500/20"><i data-lucide="cpu" class="w-3.5 h-3.5 text-cyan-400"></i></div>
+                                            <span class="text-[10px] text-cyan-200 font-bold tracking-widest">SYSTEM LOAD</span>
+                                        </div>
+                                        <span class="text-[9px] font-mono text-cyan-400">400ms Latency</span>
+                                    </div>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
+                                        Data ingestion pipeline showing increased latency. Auto-scaling triggered.
+                                    </p>
+                                </div>
+
+                            </div>
+                            
+                            <!-- Bottom Blur Fade -->
+                            <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="py-12 md:py-20 px-6 border-t border-white/10 mt-auto">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <div class="w-6 h-6 bg-white rounded flex items-center justify-center">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                        <span class="text-lg font-bold tracking-tighter uppercase text-white">Luma</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-slate-600 text-[9px] md:text-[10px] uppercase tracking-[0.3em]">Intelligence Studio &copy; 2025</p>
+                    </div>
+                </div>
+                <div class="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
+                    <span class="w-2 h-2 inline-block rounded-full bg-green-900 border border-green-500 mr-2"></span> Secure Analysis Environment
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const uploadSection = document.getElementById('upload-section');
+        const processingSection = document.getElementById('processing-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const progressBar = document.querySelector('.progress-bar');
+        const processText = document.getElementById('process-step');
+        const processPercent = document.getElementById('process-percent');
+
+        // Drag & Drop Handlers
+        // Only trigger file input if not clicking the demo button
+        dropZone.addEventListener('click', (e) => {
+            if(!e.target.closest('button')) {
+                fileInput.click();
+            }
+        });
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('drag-active');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('drag-active');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFiles, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files: files } });
+        }
+
+        function handleFiles(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                startSimulation(files[0].name);
+            }
+        }
+
+        // Processing Simulation
+        function startSimulation(filename) {
+            // UI Transition: Upload -> Processing
+            uploadSection.style.transform = "scale(0.9) translateY(20px)";
+            uploadSection.style.opacity = "0";
+            
+            setTimeout(() => {
+                uploadSection.classList.add('hidden');
+                processingSection.classList.remove('hidden');
+                
+                // Start n8n Simulation Steps
+                runStep(1, 0, `Reading ${filename}...`, 20);
+                setTimeout(() => runStep(2, 20, "Sending to n8n Webhook...", 50), 1000);
+                setTimeout(() => runStep(3, 50, "n8n Processing: Cleaning Data...", 75), 2500);
+                setTimeout(() => runStep(3, 75, "Generating Visualizations...", 100), 4000);
+                setTimeout(() => showDashboard(), 5500);
+
+            }, 500);
+        }
+
+        function runStep(stepNum, startPercent, text, endPercent) {
+            // Update Text
+            processText.innerText = text;
+            
+            // Highlight Icons
+            const steps = [
+                document.getElementById('step-1'),
+                document.getElementById('step-2'),
+                document.getElementById('step-3')
+            ];
+
+            steps.forEach(el => {
+                el.classList.remove('scale-110');
+                el.querySelector('div').classList.remove('border-blue-500', 'bg-blue-500/20');
+                el.querySelector('i')?.classList.remove('text-blue-400');
+            });
+
+            const currentStep = steps[stepNum - 1];
+            if (currentStep) {
+                currentStep.classList.add('scale-110');
+                currentStep.querySelector('div').classList.add('border-blue-500', 'bg-blue-500/20');
+                currentStep.querySelector('i')?.classList.add('text-blue-400');
+            }
+
+            // Animate Bar
+            progressBar.style.width = `${endPercent}%`;
+            processPercent.innerText = `${endPercent}%`;
+        }
+
+        function showDashboard() {
+            processingSection.style.opacity = '0';
+            processingSection.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                processingSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                
+                // Trigger reflow
+                void dashboardSection.offsetWidth;
+                
+                dashboardSection.classList.remove('opacity-0');
+                
+                // Render initial chart (Monthly)
+                renderChart('monthly');
+
+                // Start Counting Animation
+                document.querySelectorAll('.counter-anim').forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const prefix = counter.getAttribute('data-prefix') || '';
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    animateValue(counter, 0, target, 2000, prefix, suffix);
+                });
+
+            }, 500);
+        }
+
+        // Chart Data & Logic
+        const chartContainer = document.getElementById('chart-container');
+        const monthlyBtn = document.getElementById('btn-monthly');
+        const yearlyBtn = document.getElementById('btn-yearly');
+
+        const chartData = {
+            monthly: [
+                { label: 'Jan', height: '30%' },
+                { label: 'Feb', height: '45%' },
+                { label: 'Mar', height: '35%' },
+                { label: 'Apr', height: '60%' },
+                { label: 'May', height: '55%' },
+                { label: 'Jun', height: '80%' },
+                { label: 'Jul', height: '70%' },
+                { label: 'Aug', height: '90%' },
+                { label: 'Sep', height: '65%' },
+                { label: 'Oct', height: '75%' },
+                { label: 'Nov', height: '85%' },
+                { label: 'Dec', height: '95%', isRecord: true }
+            ],
+            yearly: [
+                { label: '2020', height: '40%' },
+                { label: '2021', height: '55%' },
+                { label: '2022', height: '48%' },
+                { label: '2023', height: '72%' },
+                { label: '2024', height: '88%' },
+                { label: '2025', height: '98%', isRecord: true }
+            ]
+        };
+
+        function renderChart(type) {
+            // Clear existing
+            chartContainer.innerHTML = '';
+            
+            const data = chartData[type];
+            
+            // Create bars
+            data.forEach((item, index) => {
+                const bar = document.createElement('div');
+                bar.className = `bar ${item.isRecord ? 'record-bar' : ''}`;
+                bar.setAttribute('data-month', item.label);
+                // Set initial style for animation
+                bar.style.height = '0%';
+                
+                if (item.isRecord) {
+                    const badge = document.createElement('div');
+                    badge.className = 'absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-black text-[9px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity';
+                    badge.innerText = 'Record';
+                    bar.appendChild(badge);
+                }
+
+                chartContainer.appendChild(bar);
+
+                // Animate height
+                setTimeout(() => {
+                    bar.style.height = item.height;
+                }, 100 + (index * 100));
+            });
+        }
+
+        // Button Event Listeners
+        monthlyBtn.addEventListener('click', () => {
+            if (monthlyBtn.classList.contains('bg-transparent')) {
+                toggleButtons(monthlyBtn, yearlyBtn);
+                renderChart('monthly');
+            }
+        });
+
+        yearlyBtn.addEventListener('click', () => {
+            if (yearlyBtn.classList.contains('bg-transparent')) {
+                toggleButtons(yearlyBtn, monthlyBtn);
+                renderChart('yearly');
+            }
+        });
+
+        function toggleButtons(active, inactive) {
+            // Set Active
+            active.classList.remove('bg-transparent', 'text-slate-400');
+            active.classList.add('bg-white/10', 'text-white', 'shadow-sm');
+            
+            // Set Inactive
+            inactive.classList.remove('bg-white/10', 'text-white', 'shadow-sm');
+            inactive.classList.add('bg-transparent', 'text-slate-400');
+        }
+
+        function animateValue(obj, start, end, duration, prefix, suffix) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                
+                // EaseOutExpo effect
+                const easedProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                
+                const value = (easedProgress * (end - start) + start);
+                
+                // Formatting logic
+                let formattedValue;
+                if (end % 1 !== 0) {
+                     formattedValue = value.toFixed(1);
+                } else {
+                     formattedValue = Math.floor(value).toLocaleString();
+                }
+
+                obj.innerHTML = `${prefix}${formattedValue}${suffix}`;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 3D Tilt Effect Logic
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation deg
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                } else {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                }
+            });
+        });
+
+        // Background Parallax
+        const auras = document.querySelectorAll('.aura');
+        window.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 1024) return;
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            
+            auras.forEach((aura, index) => {
+                const speed = (index + 1) * 0.3;
+                aura.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
