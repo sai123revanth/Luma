@@ -293,7 +293,7 @@
             <div class="text-[6px] font-bold uppercase tracking-widest text-slate-700 writing-vertical-lr text-center h-20 flex items-center justify-center gap-2">
                 <span>Intelligence</span>
                 <span class="w-[1px] h-4 bg-slate-800"></span>
-                <span>Luma Powered</span>
+                <span>Groq Powered</span>
             </div>
         </div>
     </aside>
@@ -319,7 +319,7 @@
             <!-- Welcome Message -->
             <div class="ai-message flex flex-col gap-2 max-w-[85%]">
                 <div class="glass-panel p-3 rounded-2xl rounded-tl-none border-white/5 text-[9px] font-bold tracking-widest leading-relaxed text-slate-300">
-                    Hello! I'm LUMA AI. I have full access to Mohan Enterprises inventory. You can ask me to find products, add items to cart, or get pricing info.
+                    Hello! I'm LUMA AI (Groq Powered). I have full access to Mohan Enterprises inventory. You can ask me to find products, add items to cart, or get pricing info.
                 </div>
             </div>
         </div>
@@ -331,7 +331,7 @@
                     <i data-lucide="send" class="w-4 h-4"></i>
                 </button>
             </div>
-            <p class="text-[6px] text-center mt-3 font-bold uppercase tracking-widest text-slate-700">Developed using Luma Intelligence</p>
+            <p class="text-[6px] text-center mt-3 font-bold uppercase tracking-widest text-slate-700">Developed using Groq Intelligence</p>
         </div>
     </div>
 
@@ -570,7 +570,60 @@
 
         function clearCart() { cart = []; renderCart(); }
 
-        // AI Logic - Refined for better backend error tracking
+        // AI Logic - Refined for Groq Backend
+        async function callLumaAI(query, retries = 3) {
+            const input = document.getElementById('ai-input');
+            
+            // 1. Construct the System Prompt (Keep existing logic)
+            const systemContent = `You are LUMA AI, assistant for Mohan Enterprises Retail POS. 
+            Inventory: ${JSON.stringify(products)}.
+            Cart: ${JSON.stringify(cart)}.
+            Commands: [SEARCH: term], [ADD: item name], [CATEGORY: name], [CLEAR].
+            Tone: Precise, uppercase. Use exact item names.`;
+
+            // 2. Construct the Messages Array (Standard OpenAI/Groq format)
+            const messages = [
+                { role: "system", content: systemContent },
+                { role: "user", content: query }
+            ];
+
+            let delay = 1000;
+            for (let i = 0; i < retries; i++) {
+                try {
+                    // 3. Send to Vercel Endpoint (which connects to Groq)
+                    const response = await fetch(apiPath, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            messages: messages,
+                            // Optional: Hint the model if the backend accepts it
+                            model: "llama3-70b-8192" 
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errBody = await response.text();
+                        throw new Error(`Server Error (${response.status}): ${errBody.substring(0, 50)}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // 4. Parse Groq Response (Standard OpenAI Format)
+                    const content = data.choices?.[0]?.message?.content;
+
+                    if (!content) throw new Error("Empty response from Groq backend.");
+                    return content;
+                } catch (err) {
+                    if (i === retries - 1) {
+                        addChatMessage('ai', `Connection Error: ${err.message}`, true);
+                        return null;
+                    }
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
         async function sendAIMessage() {
             const input = document.getElementById('ai-input'), query = input.value.trim();
             if (!query || isAIProcessing) return;
@@ -618,48 +671,6 @@
         function removeChatLoading(id) {
             const el = document.getElementById(id);
             if (el) el.remove();
-        }
-
-        async function callLumaAI(query, retries = 3) {
-            const systemPrompt = `You are LUMA AI, assistant for Mohan Enterprises Retail POS. 
-            Inventory: ${JSON.stringify(products)}.
-            Cart: ${JSON.stringify(cart)}.
-            Commands: [SEARCH: term], [ADD: item name], [CATEGORY: name], [CLEAR].
-            Tone: Precise, uppercase. Use exact item names.`;
-
-            let delay = 1000;
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(apiPath, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ query, systemPrompt })
-                    });
-                    
-                    if (!response.ok) {
-                        const errBody = await response.text();
-                        throw new Error(`Server Error (${response.status}): ${errBody.substring(0, 50)}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    // Handle standard Groq/OpenAI structure or flat response
-                    const content = data.choices?.[0]?.message?.content || 
-                                    data.text || 
-                                    data.response || 
-                                    data.content;
-
-                    if (!content) throw new Error("Empty response from Luma backend.");
-                    return content;
-                } catch (err) {
-                    if (i === retries - 1) {
-                        addChatMessage('ai', `Connection Error: ${err.message}`, true);
-                        return null;
-                    }
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
-                }
-            }
         }
 
         function processAIResponse(text) {
