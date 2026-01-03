@@ -1,70 +1,43 @@
-/**
- * Vercel Serverless Function: /api/chat
- * Handles Groq API integration with JSON enforcement.
- */
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { query, systemPrompt, image } = req.body;
-  const apiKey = process.env.GROQ_API_KEY;
+  const { query, systemPrompt } = req.body;
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-  if (!apiKey) {
-    return res.status(500).json({ message: 'API Configuration Error' });
+  if (!GROQ_API_KEY) {
+    return res.status(500).json({ error: 'GROQ_API_KEY not configured in environment' });
   }
-
-  // Model selection: Llama-3.2-90b-vision-preview for images, Llama-3.3-70b-versatile for text
-  const model = image ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
-
-  const messages = [
-    { role: "system", content: systemPrompt + " IMPORTANT: You MUST respond ONLY with a valid JSON object. No Markdown, no backticks." },
-    {
-      role: "user",
-      content: image 
-        ? [
-            { type: "text", text: query || "What is this product?" },
-            { type: "image_url", image_url: { url: image } }
-          ]
-        : query
-    }
-  ];
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        "Authorization": `Bearer ${GROQ_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: model,
-        messages: messages,
-        temperature: 0.2,
-        max_tokens: 1024,
-        response_format: { type: "json_object" } // Force JSON output
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: query }
+        ],
+        temperature: 0.7,
+        max_completion_tokens: 1024
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Groq Error:", errorData);
-      throw new Error("Groq API Request Failed");
+      return res.status(response.status).json(errorData);
     }
 
-    const result = await response.json();
-    let content = result.choices[0].message.content;
-
-    // Parse safety: ensure it's valid JSON for the frontend
-    const parsedData = JSON.parse(content);
-    return res.status(200).json(parsedData);
+    const data = await response.json();
+    // Return the specific text so the frontend knows how to parse it
+    return res.status(200).json({ text: data.choices[0].message.content });
 
   } catch (error) {
-    console.error("Backend Error:", error);
-    return res.status(500).json({ 
-      message: "LUMA AI is currently undergoing prism maintenance. Please try again shortly.",
-      error: error.message 
-    });
+    return res.status(500).json({ error: 'Failed to communicate with Groq API', details: error.message });
   }
 }
