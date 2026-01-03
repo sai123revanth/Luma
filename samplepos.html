@@ -597,8 +597,7 @@
     </div>
 
     <script>
-        // --- UPDATED: Removed Gemini API Key ---
-        // The API Key is now handled securely by the backend at /api/chat
+        // --- UPDATED: Frontend Logic to match specific Backend ---
 
         let products = [
             { name: 'Fresh Milk (1L)', price: 66, icon: 'droplets', color: 'text-cyan-400', category: 'Grocery' },
@@ -632,26 +631,30 @@
         let cameraContext = 'inventory'; 
         let lumaChatImage = null;
 
-        // --- UPDATED: AI Engine connects to Backend ---
-        async function lumaAIRequest(query, context, image) {
+        // --- UPDATED: AI Engine connects to user's Backend ---
+        async function lumaAIRequest(query, systemPrompt) {
             try {
-                // Connects to the serverless function at /api/chat
+                // Connects to the backend at /api/chat
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query, context, image })
+                    // Sending only query and systemPrompt as required by backend
+                    body: JSON.stringify({ query, systemPrompt })
                 });
 
                 if (!response.ok) {
                     throw new Error(`Backend Error: ${response.status}`);
                 }
 
+                // Backend returns { text: "..." }
                 return await response.json();
             } catch (err) {
                 console.error("LUMA AI Connection Failed:", err);
                 return { 
-                    message: "Connection to Backend Failed. Please ensure the Vercel function /api/chat is deployed and the GROQ_API_KEY environment variable is set.", 
-                    command: null 
+                    text: JSON.stringify({
+                        message: "Connection to Backend Failed. Please ensure the /api/chat function is deployed correctly.", 
+                        command: null 
+                    })
                 };
             }
         }
@@ -671,11 +674,36 @@
             btn.disabled = true;
             btn.classList.add('opacity-50');
 
-            // Build Context to send to Backend
+            // Build System Prompt Context
             const inventoryContext = products.map(p => `${p.name} (₹${p.price})`).join(', ');
+            const systemPrompt = `You are LUMA AI, a retail assistant for Mohan Enterprises.
+            You must provide a professional response. If the user asks to manage inventory or the cart, use the 'command' field in your JSON output.
+            Current Store Inventory: ${inventoryContext}
+            
+            Available Actions: 
+            - add_inventory (params: name, price, category)
+            - delete_inventory (params: name)
+            - search (params: query)
+            - set_category (params: category)
+            - add_to_cart (params: name)
+            - clear_cart
+            
+            Response Format (Strict JSON, no markdown):
+            {
+              "message": "response text",
+              "command": { "action": "...", "params": {...} } or null
+            }`;
 
             try {
-                const data = await lumaAIRequest(text || "Identify product in this image.", inventoryContext, img);
+                // Request to backend with prompt
+                const result = await lumaAIRequest(text || "Identify product in this image.", systemPrompt);
+                
+                // Parse the response.text from backend
+                let rawJson = result.text;
+                // Cleanup potentially markdown wrapped JSON from LLM
+                rawJson = rawJson.replace(/```json|```/g, '').trim();
+                
+                const data = JSON.parse(rawJson);
                 
                 addLumaChatMessage(data.message, 'ai');
 
@@ -684,7 +712,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                addLumaChatMessage("System Error: Unable to process request via Backend.", 'ai');
+                addLumaChatMessage("System Error: Could not parse AI response.", 'ai');
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50');
