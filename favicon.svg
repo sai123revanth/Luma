@@ -1,4 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#000000"/>
-  <circle cx="256" cy="256" r="128" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Main Gradient (Updated to match Website/Screenshot style) -->
+    <linearGradient id="lumaGradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0.2" stop-color="#A855F7" /> <!-- Purple 500 -->
+      <stop offset="0.8" stop-color="#EC4899" /> <!-- Pink 500 -->
+    </linearGradient>
+    
+    <!-- Accent Shine Gradient -->
+    <linearGradient id="shineGradient" x1="100" y1="100" x2="300" y2="400" gradientUnits="userSpaceOnUse">
+       <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.4"/>
+       <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    
+    <!-- Drop Shadow for Depth -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="10" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Squircle -->
+  <rect width="512" height="512" rx="120" fill="#0F172A"/>
+  
+  <!-- Group for Logo Mark -->
+  <g transform="translate(106, 106) scale(0.58)"> <!-- Centered and Scaled -->
+      
+      <!-- Vertical Bar (The L spine) -->
+      <path d="M50 0 H 180 V 350 A 20 20 0 0 1 160 370 H 50 A 50 50 0 0 1 0 320 V 50 A 50 50 0 0 1 50 0 Z" 
+            fill="url(#lumaGradient)"/>
+            
+      <!-- Horizontal Bar (The L foot) -->
+      <!-- Positioned to overlap cleanly with a slight gap suggestion for depth -->
+      <path d="M140 240 H 460 A 50 50 0 0 1 510 290 V 370 H 220 A 40 40 0 0 1 180 330 V 280 A 40 40 0 0 0 140 240 Z" 
+            fill="url(#lumaGradient)" opacity="0.9"/>
+            
+      <!-- Geometric Accent / Light Source (Updated to White) -->
+      <circle cx="430" cy="80" r="40" fill="#FFFFFF" fill-opacity="1">
+        <animate attributeName="opacity" values="1;0.7;1" dur="4s" repeatCount="indefinite" />
+      </circle>
+  </g>
 </svg>
