@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- 1. Basic Settings & Viewport (Consolidated for Mobile Stability) -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LUMA | The Intelligence Studio</title>
     <meta name="description" content="Luma provides IT solutions, AI automations, and RAG analytics for retail and business pipelines.">
     <link rel="canonical" href="https://lumait.in/" />
-<!-- 1. Basic Settings -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luma - The Intelligence Studio</title>
-    <meta name="description" content="Luma provides IT solutions, AI automations, and RAG analytics for retail and business pipelines.">
     
-    <!-- 2. PWA & Theme Color (Matches your new Black theme) -->
+    <!-- 2. PWA & Theme Color -->
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="/manifest.json">
     
-    <!-- 3. Open Graph / WhatsApp (CRITICAL SECTIONS) -->
+    <!-- 3. Open Graph / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Luma - Your Digital Experience">
     <meta property="og:description" content="Welcome to Luma. Experience the future of digital interaction.">
     <meta property="og:url" content="https://lumait.in/">
     <meta property="og:image" content="https://lumait.in/og-image.png">
-    
-    <!-- Optional: Image Dimensions for faster loading -->
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
 
@@ -32,6 +26,7 @@
     <meta name="twitter:title" content="Luma - Your Digital Experience">
     <meta name="twitter:description" content="Welcome to Luma. Experience the future of digital interaction.">
     <meta name="twitter:image" content="https://lumait.in/og-image.png">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     
@@ -48,14 +43,16 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        /* STRICT MOBILE OVERFLOW FIX */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
             background-color: var(--bg);
             color: #ffffff;
-            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             letter-spacing: -0.01em;
             margin: 0;
-            width: 100%;
         }
 
         body.menu-open {
@@ -195,6 +192,8 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
             animation: ring-rotate 15s infinite linear;
+            max-width: 90vw; /* Responsive constraint */
+            max-height: 90vw; /* Responsive constraint */
         }
 
         .ring-1 { width: 450px; height: 350px; animation-duration: 20s; border-color: rgba(59, 130, 246, 0.1); }
@@ -483,7 +482,7 @@
 
         /* Smooth text scaling for ultra-small screens */
         @media (max-width: 380px) {
-            .hero-title { font-size: 2.75rem !important; }
+            .hero-title { font-size: 2.25rem !important; }
             .section-title { font-size: 2.25rem !important; }
             .neural-ring { display: none; } /* Hide large rings on tiny screens */
         }
@@ -623,7 +622,7 @@
                         <div class="h-px w-6 md:w-12 bg-gradient-to-l from-transparent to-white/20"></div>
                     </div>
 
-                    <h1 class="hero-title text-5xl md:text-[140px] font-extrabold tracking-tighter leading-[0.9] md:leading-[0.85] mb-8 md:mb-12 text-glow relative">
+                    <h1 class="hero-title text-4xl sm:text-5xl md:text-[140px] font-extrabold tracking-tighter leading-[0.95] md:leading-[0.85] mb-8 md:mb-12 text-glow relative break-words">
                         CRAFTING <br>
                         <span class="gradient-brand">PURE LOGIC</span>
                     </h1>
@@ -645,18 +644,18 @@
             <section id="sec-preview-content" class="py-12 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
                     <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-                        <div class="md:col-span-8 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-20 flex flex-col justify-between group overflow-hidden relative min-h-[400px]">
+                        <div class="md:col-span-8 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-20 flex flex-col justify-between group overflow-hidden relative min-h-auto md:min-h-[400px]">
                             <div class="absolute -top-10 -right-10 md:-top-20 md:-right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                 <i data-lucide="brain-cog" class="w-64 h-64 md:w-96 md:h-96"></i>
                             </div>
-                            <div class="relative z-10">
+                            <div class="relative z-10 pb-8 md:pb-0">
                                 <span class="text-blue-400 font-bold text-[10px] tracking-widest uppercase block mb-4 md:mb-6">// Autonomous Logic</span>
-                                <h3 class="text-2xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">Neural Systems for <br class="hidden md:block"> Complex Ops.</h3>
+                                <h3 class="text-3xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">Neural Systems for <br class="hidden md:block"> Complex Ops.</h3>
                                 <p class="text-slate-400 text-sm md:text-lg max-w-md leading-relaxed">
                                     We build autonomous neural agents that manage global supply chains and logistics in real-time, removing human friction.
                                 </p>
                             </div>
-                            <div class="mt-8 md:mt-12 flex flex-wrap gap-3 md:gap-4">
+                            <div class="mt-8 md:mt-12 flex flex-wrap gap-3 md:gap-4 relative z-20">
                                 <a href="ai-solutions.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">AI Capabilities</a>
                                 <a href="automations.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Roadmap</a>
                             </div>
@@ -711,7 +710,7 @@
             </section>
         </main>
 
-        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+        <footer class="py-12 pb-28 md:pb-20 px-6 border-t border-white/10">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="flex items-center justify-center md:justify-start gap-2 group decoration-none">
