@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Luma</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration (Corrected: Inside a script tag, not style) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Custom brand colors to match your theme
+                        brand: {
+                            400: '#60a5fa', 
+                            500: '#3b82f6', 
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Only CSS goes here */
+        body {
+            /* smooth text rendering */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-brand-500 selection:text-white bg-gray-900 text-white flex items-center justify-center overflow-hidden">
+
+    <!-- Background Glow Effects -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl mix-blend-screen animate-pulse"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl mix-blend-screen animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 text-center px-4">
+        <!-- Animated 404 Text -->
+        <h1 class="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-purple-500 opacity-80 animate-float drop-shadow-2xl">
+            404
+        </h1>
+        
+        <h2 class="text-4xl font-bold mt-4 tracking-tight">Page Not Found</h2>
+        
+        <p class="text-gray-400 mt-6 max-w-md mx-auto text-lg leading-relaxed">
+            Oops! The page you are looking for doesn't exist or has been moved to another dimension.
+        </p>
+        
+        <!-- Action Buttons -->
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="index.html" class="group relative inline-flex items-center px-8 py-3 bg-brand-500 hover:bg-brand-400 text-white font-semibold rounded-full transition-all duration-200 shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.7)]">
+                <i class="fa-solid fa-house mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                Go Home
+            </a>
+            
+            <button onclick="history.back()" class="inline-flex items-center px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white font-semibold rounded-full transition-all duration-200 border border-gray-700">
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Go Back
+            </button>
+        </div>
+    </div>
+
+    <!-- Decorative particles (Optional) -->
+    <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+</body>
+</html>
