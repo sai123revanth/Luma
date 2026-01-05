@@ -483,7 +483,7 @@
 
         /* Smooth text scaling for ultra-small screens */
         @media (max-width: 380px) {
-            .hero-title { font-size: 2.75rem !important; }
+            .hero-title { font-size: 2.25rem !important; }
             .section-title { font-size: 2.25rem !important; }
             .neural-ring { display: none; } /* Hide large rings on tiny screens */
         }
@@ -623,7 +623,7 @@
                         <div class="h-px w-6 md:w-12 bg-gradient-to-l from-transparent to-white/20"></div>
                     </div>
 
-                    <h1 class="hero-title text-5xl md:text-[140px] font-extrabold tracking-tighter leading-[0.9] md:leading-[0.85] mb-8 md:mb-12 text-glow relative">
+                    <h1 class="hero-title text-4xl sm:text-5xl md:text-[140px] font-extrabold tracking-tighter leading-[0.95] md:leading-[0.85] mb-8 md:mb-12 text-glow relative break-words">
                         CRAFTING <br>
                         <span class="gradient-brand">PURE LOGIC</span>
                     </h1>
@@ -645,18 +645,18 @@
             <section id="sec-preview-content" class="py-12 md:py-32 px-6">
                 <div class="max-w-7xl mx-auto">
                     <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-                        <div class="md:col-span-8 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-20 flex flex-col justify-between group overflow-hidden relative min-h-[400px]">
+                        <div class="md:col-span-8 glass-panel rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-20 flex flex-col justify-between group overflow-hidden relative min-h-auto md:min-h-[400px]">
                             <div class="absolute -top-10 -right-10 md:-top-20 md:-right-20 p-12 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                 <i data-lucide="brain-cog" class="w-64 h-64 md:w-96 md:h-96"></i>
                             </div>
-                            <div class="relative z-10">
+                            <div class="relative z-10 pb-8 md:pb-0">
                                 <span class="text-blue-400 font-bold text-[10px] tracking-widest uppercase block mb-4 md:mb-6">// Autonomous Logic</span>
-                                <h3 class="text-2xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">Neural Systems for <br class="hidden md:block"> Complex Ops.</h3>
+                                <h3 class="text-3xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">Neural Systems for <br class="hidden md:block"> Complex Ops.</h3>
                                 <p class="text-slate-400 text-sm md:text-lg max-w-md leading-relaxed">
                                     We build autonomous neural agents that manage global supply chains and logistics in real-time, removing human friction.
                                 </p>
                             </div>
-                            <div class="mt-8 md:mt-12 flex flex-wrap gap-3 md:gap-4">
+                            <div class="mt-8 md:mt-12 flex flex-wrap gap-3 md:gap-4 relative z-20">
                                 <a href="ai-solutions.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">AI Capabilities</a>
                                 <a href="automations.html" class="px-5 py-2.5 border border-white/10 rounded-xl text-[9px] md:text-[10px] font-bold uppercase hover:bg-white hover:text-black transition-all">Roadmap</a>
                             </div>
@@ -711,7 +711,7 @@
             </section>
         </main>
 
-        <footer class="py-12 md:py-20 px-6 border-t border-white/10">
+        <footer class="py-12 pb-28 md:pb-20 px-6 border-t border-white/10">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="flex items-center justify-center md:justify-start gap-2 group decoration-none">
