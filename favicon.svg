@@ -29,8 +29,8 @@
   <!-- Background Squircle -->
   <rect width="512" height="512" rx="120" fill="#0F172A"/>
   
-  <!-- Group for Logo Mark - SCALED UP FOR VISIBILITY -->
-  <g transform="translate(40, 100) scale(0.85)"> 
+  <!-- Group for Logo Mark - MINIMAL SCALE -->
+  <g transform="translate(90, 136) scale(0.65)"> 
       
       <!-- Vertical Bar (The L spine) -->
       <path d="M50 0 H 180 V 350 A 20 20 0 0 1 160 370 H 50 A 50 50 0 0 1 0 320 V 50 A 50 50 0 0 1 50 0 Z" 
@@ -40,8 +40,8 @@
       <path d="M140 240 H 460 A 50 50 0 0 1 510 290 V 370 H 220 A 40 40 0 0 1 180 330 V 280 A 40 40 0 0 0 140 240 Z" 
             fill="url(#lumaGradient)" opacity="0.9"/>
             
-      <!-- Geometric Accent / Light Source (Enlarged) -->
-      <circle cx="430" cy="80" r="60" fill="#FFFFFF" fill-opacity="1">
+      <!-- Geometric Accent / Light Source (Balanced for Minimal Look) -->
+      <circle cx="430" cy="80" r="50" fill="#FFFFFF" fill-opacity="1">
         <animate attributeName="opacity" values="1;0.7;1" dur="4s" repeatCount="indefinite" />
       </circle>
   </g>
