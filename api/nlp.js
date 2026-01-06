@@ -44,21 +44,12 @@ export default async function handler(req, res) {
 
         // ==============================================================================
         // CONFIGURATION: PROVIDER SETUP
-        // Use the matching URL and Model ID for your specific API Key provider.
         // ==============================================================================
 
         // OPTION 1: Groq (Fastest, Recommended for Llama 3.1)
         const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
         // Note: Groq maps "Meta-Llama-3.1-8B-Instruct" to the ID below:
         const MODEL_NAME = 'llama-3.1-8b-instant';
-
-        // OPTION 2: Hugging Face Inference API (If your key is from huggingface.co)
-        // const API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3.1-8B-Instruct/v1/chat/completions';
-        // const MODEL_NAME = 'meta-llama/Meta-Llama-3.1-8B-Instruct';
-
-        // OPTION 3: Together AI (If your key is from Together.xyz)
-        // const API_URL = 'https://api.together.xyz/v1/chat/completions';
-        // const MODEL_NAME = 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo';
 
         // ==============================================================================
 
@@ -86,16 +77,32 @@ export default async function handler(req, res) {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Provider API Error:', response.status, errorText);
+            // ERROR HANDLING FIX: Try to parse JSON error first to avoid [object Object]
+            let errorMsg = `Provider API Error: ${response.status}`;
             
-            // Specific Error Messages
+            try {
+                const errorJson = await response.json();
+                // Groq/OpenAI format usually has error.message
+                if (errorJson.error && typeof errorJson.error === 'object') {
+                    errorMsg = errorJson.error.message || JSON.stringify(errorJson.error);
+                } else if (errorJson.error && typeof errorJson.error === 'string') {
+                    errorMsg = errorJson.error;
+                } else {
+                    errorMsg = JSON.stringify(errorJson);
+                }
+            } catch (parseError) {
+                // If JSON parse fails, fall back to text
+                const errorText = await response.text();
+                errorMsg += ` - ${errorText}`;
+            }
+
+            // Specific status checks
             if (response.status === 401) {
-                throw new Error('Invalid API Key. Please check your CHAT_API environment variable.');
+                throw new Error(`Invalid API Key. (Provider message: ${errorMsg})`);
             } else if (response.status === 404) {
-                 throw new Error(`Model '${MODEL_NAME}' not found. Verify your API Key provider matches the API_URL selected in api/chat.js.`);
+                 throw new Error(`Model '${MODEL_NAME}' not found. (Provider message: ${errorMsg})`);
             } else {
-                throw new Error(`Provider API Error: ${response.status} - ${errorText}`);
+                throw new Error(errorMsg);
             }
         }
 
@@ -106,9 +113,12 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('Backend Handler Error:', error);
+        
+        // Ensure error is always a string to prevent [object Object] in frontend
+        const safeErrorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        
         return res.status(500).json({ 
-            error: 'Failed to process request', 
-            details: error.message 
+            error: safeErrorMessage || 'An unexpected server error occurred'
         });
     }
 }
