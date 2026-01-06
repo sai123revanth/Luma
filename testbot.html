@@ -406,25 +406,35 @@
                     body: JSON.stringify({ message: text })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}`);
+                // Check for JSON response even if status is error
+                let data = null;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
+                } else {
+                    // If not JSON, probably a 404 or 500 HTML error page from Vercel
+                    const textErr = await response.text();
+                    console.error("Non-JSON Response:", textErr);
+                    // Don't show full HTML in chat, just status
                 }
 
-                const data = await response.json();
-                
+                if (!response.ok) {
+                    const errorMsg = data && data.error ? data.error : `Server responded with ${response.status} ${response.statusText}`;
+                    throw new Error(errorMsg);
+                }
+
                 removeLoading();
                 
-                // Handles the response format from the backend ({ answer: ... } or { error: ... })
-                if (data.error) {
-                     appendMessage(`**Error:** ${data.error}`, 'bot');
-                } else {
+                if (data && data.answer) {
                      appendMessage(data.answer, 'bot');
+                } else {
+                     appendMessage("**Error:** Received empty response from server.", 'bot');
                 }
 
             } catch (error) {
                 removeLoading();
-                appendMessage("**Error:** Could not connect to the backend. Please check your Vercel logs.", 'bot');
-                console.error(error);
+                appendMessage(`**Connection Error:** ${error.message}`, 'bot');
+                console.error("Chat Error:", error);
             }
         }
 
