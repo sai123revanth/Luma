@@ -1,27 +1,66 @@
 export default async function handler(req, res) {
+    // 1. Handle CORS (Cross-Origin Resource Sharing)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle Preflight Request
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { message } = req.body;
+        // 2. Robust Body Parsing
+        let body = req.body;
+        if (typeof body === 'string') {
+            try {
+                body = JSON.parse(body);
+            } catch (e) {
+                return res.status(400).json({ error: 'Invalid JSON body in request' });
+            }
+        }
         
-        // Retrieve the API key from Vercel Environment Variables
-        // Ensure this matches your Vercel Project Settings > Environment Variables
-        const apiKey = process.env.CHAT_API; 
-
-        if (!apiKey) {
-            return res.status(500).json({ error: 'Server configuration error: API Key missing' });
+        const { message } = body || {};
+        
+        if (!message) {
+             return res.status(400).json({ error: 'Message field is missing in request body' });
         }
 
-        // CONFIGURATION: Llama 3.1 Provider URL (Defaulting to Groq)
-        const API_URL = 'https://api.groq.com/openai/v1/chat/completions'; 
+        // Retrieve the API key
+        const apiKey = process.env.CHAT_API; 
+        if (!apiKey) {
+            return res.status(500).json({ error: 'Server Error: CHAT_API environment variable is not set' });
+        }
 
-        // CONFIGURATION: Llama 3.1 Model ID
-        // For Groq use: 'llama-3.1-70b-versatile' or 'llama-3.1-8b-instant'
-        // For Together AI use: 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo'
-        const MODEL_NAME = 'llama-3.1-70b-versatile';
+        // ==============================================================================
+        // CONFIGURATION: PROVIDER SETUP
+        // Use the matching URL and Model ID for your specific API Key provider.
+        // ==============================================================================
+
+        // OPTION 1: Groq (Fastest, Recommended for Llama 3.1)
+        const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+        // Note: Groq maps "Meta-Llama-3.1-8B-Instruct" to the ID below:
+        const MODEL_NAME = 'llama-3.1-8b-instant';
+
+        // OPTION 2: Hugging Face Inference API (If your key is from huggingface.co)
+        // const API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3.1-8B-Instruct/v1/chat/completions';
+        // const MODEL_NAME = 'meta-llama/Meta-Llama-3.1-8B-Instruct';
+
+        // OPTION 3: Together AI (If your key is from Together.xyz)
+        // const API_URL = 'https://api.together.xyz/v1/chat/completions';
+        // const MODEL_NAME = 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo';
+
+        // ==============================================================================
 
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -34,7 +73,7 @@ export default async function handler(req, res) {
                 messages: [
                     {
                         role: "system",
-                        content: "You are NexusAI, a technical assistant specialized in coding, debugging, and system architecture. You provide concise, technical, and accurate answers."
+                        content: "You are NexusAI, a technical assistant specialized in coding, debugging, and system architecture."
                     },
                     {
                         role: "user",
@@ -47,19 +86,29 @@ export default async function handler(req, res) {
         });
 
         if (!response.ok) {
-            const errorData = await response.text();
-            throw new Error(`API Error: ${response.status} - ${errorData}`);
+            const errorText = await response.text();
+            console.error('Provider API Error:', response.status, errorText);
+            
+            // Specific Error Messages
+            if (response.status === 401) {
+                throw new Error('Invalid API Key. Please check your CHAT_API environment variable.');
+            } else if (response.status === 404) {
+                 throw new Error(`Model '${MODEL_NAME}' not found. Verify your API Key provider matches the API_URL selected in api/chat.js.`);
+            } else {
+                throw new Error(`Provider API Error: ${response.status} - ${errorText}`);
+            }
         }
 
         const data = await response.json();
-        
-        // Extract the actual text response
-        const botReply = data.choices[0].message.content;
+        const botReply = data.choices?.[0]?.message?.content || "No response generated.";
 
         return res.status(200).json({ answer: botReply });
 
     } catch (error) {
-        console.error('Backend Error:', error);
-        return res.status(500).json({ error: 'Failed to process request', details: error.message });
+        console.error('Backend Handler Error:', error);
+        return res.status(500).json({ 
+            error: 'Failed to process request', 
+            details: error.message 
+        });
     }
 }
