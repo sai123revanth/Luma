@@ -8,7 +8,7 @@
     <!-- Google Fonts for Typography matching the app -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,13 +18,12 @@
             theme: {
                 extend: {
                     colors: {
-                        retroCopper: '#C06236',
-                        retroGold: '#C6A664',
-                        lightBg: '#F6F1E5',
-                        lightSurface: '#FFFFFF',
-                        lightText: '#0F2D28',
-                        lightBorder: '#DCD3C6',
-                        darkBg: '#0C1917',
+                        darpanDark: '#2B261A',
+                        darpanLight: '#EAE4D3',
+                        darpanCopper: '#B66D46',
+                        darpanBorder: '#453E2E',
+                        darpanPhone: '#1E1A11',
+                        darpanImageBg: '#2A2A2A',
                     },
                     fontFamily: {
                         sans: ['Inter', 'Helvetica', 'sans-serif'],
@@ -48,8 +47,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-scale: 50;
-            opacity: 0.04;
+            opacity: 0.03;
             background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
             background-repeat: repeat;
             z-index: 9999;
@@ -70,104 +68,118 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #F6F1E5;
+            background: #2B261A;
         }
         ::-webkit-scrollbar-thumb {
-            background: #C6A664;
+            background: #453E2E;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #C06236;
+            background: #B66D46;
         }
     </style>
 </head>
-<body class="bg-lightBg text-lightText font-sans antialiased relative overflow-x-hidden">
+<body class="bg-darpanDark text-darpanLight font-sans antialiased relative overflow-x-hidden min-h-screen flex flex-col">
 
     <!-- Texture Overlay -->
     <div class="texture-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="w-full py-6 px-6 lg:px-12 flex justify-between items-center relative z-10 border-b border-lightBorder">
-        <div class="flex flex-col items-center">
-            <h1 class="font-serif text-xl lg:text-2xl font-bold tracking-superwide text-lightText">D A R P A N</h1>
-            <p class="font-sans text-[8px] lg:text-[10px] tracking-widest text-lightText/60 mt-1 uppercase">Virtual Studio</p>
+    <nav class="w-full py-6 px-6 md:px-12 flex justify-between items-center relative z-10 border-b border-darpanBorder/50">
+        <div class="flex flex-col items-start md:items-center">
+            <h1 class="font-serif text-xl md:text-2xl font-bold tracking-superwide text-darpanLight">D A R P A N</h1>
+            <p class="font-sans text-[8px] md:text-[10px] tracking-widest text-darpanLight/60 mt-1 uppercase">Virtual Studio</p>
         </div>
         <div>
-            <!-- Direct Download Link formatting: https://drive.google.com/uc?export=download&id=YOUR_FILE_ID -->
+            <!-- Direct Download Link formatting -->
             <a href="https://drive.google.com/uc?export=download&id=1VN0Rqi5nwkgUl8dFRrtAcJtt7Ofic99S" 
-               class="hidden md:inline-flex items-center gap-2 border-2 border-lightText text-lightText px-6 py-3 text-xs font-bold tracking-widest hover:bg-lightText hover:text-lightBg transition-colors duration-300">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                GET THE APP
+               class="inline-flex items-center gap-2 border border-darpanLight text-darpanLight px-4 py-2 md:px-6 md:py-3 text-[10px] md:text-xs font-bold tracking-widest hover:bg-darpanLight hover:text-darpanDark transition-colors duration-300">
+                <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span class="hidden sm:inline">GET THE APP</span>
+                <span class="sm:hidden">DOWNLOAD</span>
             </a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <main class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+    <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center relative z-10">
         
+        <!-- Background decorative lines spanning the entire hero -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block">
+             <div class="absolute top-1/2 right-[10%] -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-darpanBorder/40"></div>
+             <div class="absolute top-1/2 right-[10%] -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-darpanBorder/20"></div>
+        </div>
+
         <!-- Left Column: Copy & CTA -->
-        <div class="flex flex-col justify-center text-center lg:text-left order-2 lg:order-1">
-            <div class="inline-flex items-center justify-center lg:justify-start gap-3 mb-6">
-                <span class="w-8 h-[1px] bg-retroCopper"></span>
-                <span class="font-sans text-[10px] font-bold tracking-widest text-retroCopper uppercase">The Future of Fashion</span>
+        <div class="flex flex-col justify-center text-left order-1 lg:order-1 relative z-20">
+            <div class="inline-flex items-center gap-3 mb-6">
+                <span class="w-8 h-[1px] bg-darpanCopper"></span>
+                <span class="font-sans text-[10px] font-bold tracking-widest text-darpanCopper uppercase">The Future of Fashion</span>
             </div>
             
-            <h2 class="font-serif text-4xl lg:text-6xl font-bold leading-tight text-lightText mb-6">
-                Step in front of the glass. <br>
-                <span class="italic font-normal text-retroCopper">Reflect your style.</span>
+            <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.1] text-darpanLight mb-6">
+                Step in front of the <br class="hidden sm:block"> glass.<br>
+                <span class="italic font-semibold text-darpanCopper">Reflect your style.</span>
             </h2>
             
-            <p class="font-serif italic text-lg lg:text-xl text-lightText/70 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p class="font-serif italic text-base sm:text-lg md:text-xl text-darpanLight/70 mb-10 max-w-xl leading-relaxed">
                 Darpan is an elegant AI-powered virtual try-on studio. Digitize your wardrobe, consult our AI assistant, and visualize the latest catalog arrivals on yourself instantly.
             </p>
             
-            <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 lg:justify-start w-full sm:w-auto">
                 <!-- Direct Google Drive Download Link -->
                 <a href="https://drive.google.com/uc?export=download&id=1VN0Rqi5nwkgUl8dFRrtAcJtt7Ofic99S" 
-                   class="w-full sm:w-auto bg-lightText text-lightBg border border-lightText px-8 py-4 flex items-center justify-center gap-3 text-sm font-bold tracking-widest hover:bg-retroCopper hover:border-retroCopper transition-all duration-300 shadow-[4px_4px_0px_rgba(15,45,40,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1">
+                   class="w-full sm:w-auto bg-darpanLight text-darpanDark border border-darpanLight px-8 py-4 flex items-center justify-center gap-3 text-xs md:text-sm font-bold tracking-widest hover:bg-darpanCopper hover:border-darpanCopper hover:text-darpanLight transition-all duration-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     DOWNLOAD APK
                 </a>
-                <span class="font-sans text-[10px] text-lightText/50 tracking-widest uppercase">Android 8.0+ Required</span>
             </div>
+            <p class="font-sans text-[10px] text-darpanLight/40 tracking-widest uppercase mt-4 text-center sm:text-left">Android 8.0+ Required</p>
         </div>
 
         <!-- Right Column: Visual Mockup -->
-        <div class="order-1 lg:order-2 flex justify-center relative">
-            <!-- Decorative circle -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[450px] lg:h-[450px] rounded-full border border-retroGold opacity-30"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] lg:w-[480px] lg:h-[480px] rounded-full border border-lightText opacity-10 border-dashed"></div>
+        <div class="order-2 lg:order-2 flex justify-center relative z-20 w-full mt-8 lg:mt-0">
+            <!-- Mobile decorative circles (visible only on small screens) -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full border border-darpanBorder/40 lg:hidden pointer-events-none"></div>
 
             <!-- CSS Phone Mockup -->
-            <div class="relative w-[280px] h-[580px] bg-lightBg border-[8px] border-lightText rounded-[40px] shadow-2xl animate-float z-10 overflow-hidden flex flex-col">
-                <!-- Top Notch -->
-                <div class="absolute top-0 inset-x-0 h-6 bg-lightText rounded-b-xl w-32 mx-auto z-20"></div>
-                
-                <!-- App Mockup UI inside -->
-                <div class="flex-1 bg-lightBg flex flex-col pt-10 px-4 pb-4">
-                    <!-- App Header Mockup -->
-                    <div class="text-center mb-6 border-b border-lightBorder pb-4">
-                        <h3 class="font-serif text-lg tracking-widest font-bold text-lightText">D A R P A N</h3>
-                    </div>
+            <div class="relative w-[280px] sm:w-[320px] aspect-[14/29] bg-darpanBorder rounded-[40px] shadow-2xl animate-float p-[2px] sm:p-1 flex flex-col mx-auto scale-95 sm:scale-100 transform origin-top">
+                <!-- Inner Phone Bezel -->
+                <div class="flex-1 bg-darpanPhone rounded-[36px] overflow-hidden flex flex-col relative border border-black/20">
+                    <!-- Top Notch -->
+                    <div class="absolute top-0 inset-x-0 h-6 bg-darpanBorder rounded-b-xl w-32 mx-auto z-20 border-b border-x border-black/20"></div>
                     
-                    <!-- App Image area mockup -->
-                    <div class="relative w-full h-64 rounded-t-[100px] rounded-b-sm border-2 border-retroGold overflow-hidden shadow-lg mx-auto bg-gray-200">
-                        <!-- High quality fashion placeholder -->
-                        <img src="https://images.unsplash.com/photo-1550614000-4b95d468e82a?auto=format&fit=crop&w=400&q=80" alt="Fashion Try On" class="w-full h-full object-cover">
-                        <!-- Try on button overlay -->
-                        <div class="absolute bottom-4 inset-x-0 flex justify-center">
-                            <div class="bg-lightText text-lightBg px-4 py-2 text-[10px] font-bold tracking-widest uppercase">Generating Reflection...</div>
+                    <!-- App Mockup UI inside -->
+                    <div class="flex-1 flex flex-col pt-12 px-5 pb-5 bg-darpanPhone">
+                        <!-- App Header Mockup -->
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="h-[1px] flex-grow bg-darpanBorder/50"></div>
+                            <h3 class="font-serif text-sm tracking-[0.3em] font-bold text-darpanLight px-4">D A R P A N</h3>
+                            <div class="h-[1px] flex-grow bg-darpanBorder/50"></div>
                         </div>
-                    </div>
+                        
+                        <!-- Arch Image area mockup -->
+                        <div class="relative w-full aspect-[4/5] rounded-t-[120px] rounded-b-sm border border-darpanBorder overflow-hidden shadow-lg mx-auto bg-darpanImageBg">
+                            <!-- High quality fashion placeholder -->
+                            <img src="https://images.unsplash.com/photo-1550614000-4b95d468e82a?auto=format&fit=crop&w=400&q=80" alt="Fashion Try On" class="w-full h-full object-cover opacity-80 mix-blend-luminosity">
+                            
+                            <!-- Overlay effect to match the screenshot -->
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-darpanPhone/90"></div>
 
-                    <!-- App Garment List Mockup -->
-                    <div class="mt-6">
-                        <div class="w-20 h-[1px] bg-retroCopper mb-3"></div>
-                        <div class="flex gap-3">
-                            <div class="w-16 h-24 bg-white border border-lightBorder p-1 shadow-sm">
-                                <img src="https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Garment 1">
+                            <!-- "Generating Reflection" Banner overlay -->
+                            <div class="absolute bottom-4 inset-x-4 flex justify-center">
+                                <div class="w-full bg-darpanDark/80 backdrop-blur-sm border border-darpanBorder text-darpanLight px-4 py-3 text-[8px] sm:text-[9px] font-bold tracking-[0.2em] uppercase leading-relaxed text-left">
+                                    <span class="text-darpanCopper">⚡</span> Generating<br>Reflection...
+                                </div>
                             </div>
-                            <div class="w-16 h-24 bg-white border border-lightBorder p-1 shadow-sm">
+                        </div>
+
+                        <!-- App Garment List Mockup -->
+                        <div class="mt-8 flex gap-3">
+                            <div class="w-[60px] h-[80px] bg-darpanDark border border-darpanBorder p-1 shadow-sm opacity-80">
+                                <img src="https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover grayscale" alt="Garment 1">
+                            </div>
+                            <div class="w-[60px] h-[80px] bg-darpanDark border border-darpanLight p-1 shadow-sm">
                                 <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover" alt="Garment 2">
                             </div>
                         </div>
@@ -177,61 +189,22 @@
         </div>
     </main>
 
-    <!-- Features Grid -->
-    <section class="border-y border-lightBorder bg-white/50 relative z-10 py-16">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-lightBorder">
-            
-            <div class="px-6 flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full border border-retroCopper flex items-center justify-center mb-6 text-retroCopper bg-retroCopper/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-                </div>
-                <h3 class="font-serif text-lg font-bold text-lightText mb-3">AI Virtual Try-On</h3>
-                <p class="font-sans text-sm text-lightText/70 leading-relaxed">Powered by state-of-the-art IDM-VTON models. See how garments fit on your own photos instantly without wait times.</p>
+    <!-- Footer Area (Kept minimal to match the elegant landing page feel) -->
+    <footer class="border-t border-darpanBorder/50 py-8 relative z-10 mt-auto bg-darpanDark">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div>
+                <p class="font-serif italic text-xs md:text-sm text-darpanLight/50">Experience the magic of Virtual Try-On.</p>
             </div>
-
-            <div class="px-6 pt-12 md:pt-0 flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full border border-retroGold flex items-center justify-center mb-6 text-retroGold bg-retroGold/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                </div>
-                <h3 class="font-serif text-lg font-bold text-lightText mb-3">Personal Archive</h3>
-                <p class="font-sans text-sm text-lightText/70 leading-relaxed">Digitize your life. Upload photos of your own wardrobe directly to the studio and mix-and-match with the catalog.</p>
-            </div>
-
-            <div class="px-6 pt-12 md:pt-0 flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full border border-lightText flex items-center justify-center mb-6 text-lightText bg-lightText/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                </div>
-                <h3 class="font-serif text-lg font-bold text-lightText mb-3">Darpan Assistant</h3>
-                <p class="font-sans text-sm text-lightText/70 leading-relaxed">A highly intelligent, multilingual fashion consultant available 24/7. Ask for styling advice in English, Hindi, Telugu, and more.</p>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-darkBg text-darkText py-12 relative z-10 border-t-4 border-retroCopper">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex flex-col items-center md:items-start text-center md:text-left">
-                <h1 class="font-serif text-xl font-bold tracking-superwide text-[#F6F1E5]">D A R P A N</h1>
-                <p class="font-serif italic text-sm text-[#F6F1E5]/50 mt-2">Reflect Your True Style.</p>
-            </div>
-            
-            <div class="text-center md:text-right">
-                <a href="https://drive.google.com/uc?export=download&id=1VN0Rqi5nwkgUl8dFRrtAcJtt7Ofic99S" class="inline-block bg-retroCopper text-white px-6 py-2 text-[10px] font-bold tracking-widest uppercase hover:bg-white hover:text-retroCopper transition-colors">
-                    Download APK
-                </a>
-                <p class="font-sans text-[10px] tracking-widest text-[#F6F1E5]/30 mt-4 uppercase">© 2024 Darpan Virtual Studio. All rights reserved.</p>
-            </div>
+            <p class="font-sans text-[8px] md:text-[10px] tracking-widest text-darpanLight/30 uppercase">© 2024 Darpan Virtual Studio. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Installation Script Instructions for Android -->
     <script>
-        // Simple script to log downloads or handle analytics if needed in the future
+        // Simple script to log downloads
         document.querySelectorAll('a[href*="drive.google.com"]').forEach(link => {
             link.addEventListener('click', () => {
-                console.log('APK Download initiated');
-                // You can add Google Analytics event tracking here
+                console.log('Darpan APK Download initiated');
             });
         });
     </script>
